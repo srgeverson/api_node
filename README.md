@@ -54,8 +54,13 @@ $ DATABASE_HOST=http://localhost
 $ DATABASE_USERNAME=username
 $ DATABASE_PASSWORD=password
 
-
 💡 As tabelas e os dados inicias da aplicação estão dentro das pastas /api_node/src/core/database/migraions e /api_node/src/core/database/seeders respectivamente.
+
+# Rodando as migrations
+$ npx sequelize db:migrate
+
+# Rodando as seeders
+$ npx sequelize db:seed:all
 
 ### 
 $ npm install pg --save

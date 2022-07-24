@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert('genre_movie', [
+    return queryInterface.bulkInsert('usuarios_permissoes', [
       {
         usuarioId: 1,
         permissaoId: 1,
@@ -22,6 +22,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    queryInterface.bulkDelete('genre_movie', null, {})
+    queryInterface.bulkDelete('usuarios_permissoes', null, {})
   }
 };

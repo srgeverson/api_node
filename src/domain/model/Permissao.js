@@ -1,11 +1,11 @@
 import Sequelize, { Model } from 'sequelize';
 
-class Usuario extends Model {
+class Permissao extends Model {
 
     static init(sequelize) {
         super.init(
             {
-                id: { type: Sequelize.INTEGER, allowNull: false, primaryKey: true, autoIncrement: true, },
+                id: { type: Sequelize.INTEGER, allowNull: false, primaryKey: true, autoIncrement: true },
                 nome: { type: Sequelize.STRING(100), allowNull: false, unique: true },
                 descricao: { type: Sequelize.STRING(100), allowNull: false },
                 ativo: { type: Sequelize.BOOLEAN, allowNUll: false, defaultValue: true }
@@ -28,4 +28,4 @@ class Usuario extends Model {
     }
 }
 
-export default Usuario
+export default Permissao

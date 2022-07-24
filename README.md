@@ -47,6 +47,40 @@ $ npm install sucrase --save
 ### Reiniciar o servidor sempre que houver alteração no código fonte
 $ npm install -D nodemon --save
 
+# Crie um banco de dados e adicione ao arquivo .env na raiz do projeto as seguintes configurações:
+$ DATABASE_DIALECT=dialect
+$ DATABASE_NAME=database-name
+$ DATABASE_HOST=http://localhost
+$ DATABASE_USERNAME=username
+$ DATABASE_PASSWORD=password
+
+
+💡 As tabelas e os dados inicias da aplicação estão dentro das pastas /api_node/src/core/database/migraions e /api_node/src/core/database/seeders respectivamente.
+
+### 
+$ npm install pg --save
+
+### 
+$ npm install pg-hstore --save
+
+### 
+$ npm install reflect-metadata --save
+
+### 
+$ npm install sequelize --save
+
+### 
+$ npm install status-code-enum --save
+
+### 
+$ npm install swagger-autogen --save
+
+### 
+$ npm install swagger-ui-express --save
+
+### 
+$ npm install -D sequelize-cli
+
 ```
 
 #### 🎲 Rodando a aplicação em ambiente para desenvolvimento

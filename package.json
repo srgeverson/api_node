@@ -1,0 +1,33 @@
+{
+  "name": "api_node",
+  "version": "1.0.0",
+  "description": "Este sistema servirá para gerenciar usuários.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node -r sucrase/register src/index.js",
+    "development": "nodemon src/index.js",
+    "build": "sucrase ./src -d ./outDir --transforms imports"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/srgeverson/api_node.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/srgeverson/api_node/issues"
+  },
+  "homepage": "https://github.com/srgeverson/api_node#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "express-async-handler": "^1.2.0",
+    "sucrase": "^3.24.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  }
+}

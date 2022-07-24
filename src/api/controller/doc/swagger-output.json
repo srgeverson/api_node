@@ -1,0 +1,46 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "0.0.1",
+    "title": "Curtas.Tv-API",
+    "description": "API do Curtas.TV"
+  },
+  "host": "localhost:8080",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Permissões",
+      "description": "Cadastro de Permissões."
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [],
+  "produces": [],
+  "paths": {
+    "/permissoes": {
+      "get": {
+        "tags": [
+          "permissoes"
+        ],
+        "description": "Cadastro de Permissões.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Permissao"
+            },
+            "description": "Lista de permissões encontradas."
+          },
+          "5xx": {
+            "schema": {
+              "$ref": "#/definitions/Error500"
+            },
+            "description": "Erro interno."
+          }
+        }
+      }
+    }
+  }
+}

@@ -107,6 +107,9 @@ $ npm start
 ### Iniciando a aplicação em modo de desenvolvimento.
 $ npm run development
 
+### 
+$ http://localhost:8080/doc
+
 ```
 
 ## 👨‍💻 Equipe de Desenvolvimento

@@ -1,0 +1,104 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Gerencia Usuários API",
+    "description": "Esta API servirá para gerenciar usuários."
+  },
+  "host": "localhost:8080",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Permissões",
+      "description": "Gerencia o cadastro de permissões."
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/v1/permissoes": {
+      "get": {
+        "tags": [
+          "Permissões"
+        ],
+        "description": "Lista de todas permissões cadastradas.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Lista de permissões.",
+            "schema": {
+              "$ref": "#/definitions/Permissoes"
+            }
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/Error500"
+            },
+            "description": "Erro interno."
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Permissoes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "nome": {
+            "type": "string",
+            "example": "funcionario"
+          },
+          "descricao": {
+            "type": "string",
+            "example": "Permissão de funcionário"
+          },
+          "ativo": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      }
+    },
+    "Error400": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "statusCode": {
+          "type": "number",
+          "example": 400
+        },
+        "message": {
+          "type": "string",
+          "example": "ErrorMessage"
+        }
+      }
+    },
+    "Error500": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "statusCode": {
+          "type": "number",
+          "example": 500
+        },
+        "message": {
+          "type": "string",
+          "example": "ErrorMessage"
+        }
+      }
+    }
+  }
+}

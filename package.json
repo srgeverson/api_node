@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node -r sucrase/register src/index.js",
     "development": "nodemon src/index.js",
-    "build": "sucrase ./src -d ./outDir --transforms imports"
+    "build": "sucrase ./src -d ./outDir --transforms imports",
+    "swagger-autogen": "node ./src/api/controller/doc/swagger.js"
   },
   "repository": {
     "type": "git",
@@ -15,7 +16,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/srgeverson/api_node/issues"
   },
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.19",
-    "sequelize-cli": "^6.4.1"
+    "sequelize-cli": "^6.4.1",
+    "swagger-autogen": "^2.21.5"
   }
 }

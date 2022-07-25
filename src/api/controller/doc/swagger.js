@@ -1,6 +1,6 @@
 const swaggerAutogen = require('swagger-autogen')();
 
-const doc = {
+const docs = {
     info: {
         version: '1.0.0',
         title: 'Gerencia Usuários API',
@@ -10,31 +10,31 @@ const doc = {
     schemes: ['http'],
     tags: [
         {
-            name: 'permissoes',
-            description: 'Cadastro de Permissões.'
+            name: 'Permissões',
+            description: 'Gerencia o cadastro de permissões.'
         }
     ],
     definitions: {
-        PopularMovies: [{
+        Permissoes: [{
             id: 1,
             nome: 'funcionario',
             descricao: "Permissão de funcionário",
             ativo: true
         }],
-        Error500: {
-            status: 'error',
-            statusCode: 500,
-            message: 'ErrorMessage'
-        },
         Error400: {
             status: 'error',
             statusCode: 400,
+            message: 'ErrorMessage'
+        },
+        Error500: {
+            status: 'error',
+            statusCode: 500,
             message: 'ErrorMessage'
         }
     }
 }
 
-const outputFile = 'src/doc/swagger-output.json';
-const endpointsFiles = ['src/api/routes/index.js'];
+const outputFile = './src/api/controller/doc/swagger.json';
+const endpointsFiles = ['./src/api/routes/index.js'];
 
-swaggerAutogen(outputFile, endpointsFiles, doc);
+swaggerAutogen(outputFile, endpointsFiles, docs);

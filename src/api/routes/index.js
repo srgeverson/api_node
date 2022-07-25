@@ -1,28 +1,28 @@
 import { Router } from 'express';
 import asyncHandler from 'express-async-handler';
 
-const swaggerFile = require('../controller/doc/swagger-output.json');
+const swaggerFile = require('../controller/doc/swagger.json');
 const swaggerUi = require('swagger-ui-express');
 
 import PermissaoController from '../controller/PermissaoController';
 
-const routes = Router()
+const routes = Router();
 
 const permissaoController = new PermissaoController();
 
-routes.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+routes.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
-routes.get('/permissoes', asyncHandler(async (request, response) => {
-    // #swagger.tags = ['permissoes']
-    // #swagger.description = 'Endpoint para todas permissoes cadastradas.'
+routes.get(`/v1/permissoes`, asyncHandler(async (request, response) => {
+    // #swagger.tags = ['Permissões']
+    // #swagger.description = 'Lista de todas permissões cadastradas.'
 
-    /** #swagger.responses[200] = { 
-         schema: { $ref: "#/definitions/Permissao" },
-        description: 'Lista de todas permissões existentes.' 
+    /** #swagger.responses[200] = {
+        schema: { $ref: "#/definitions/Permissoes" },
+        description: 'Lista de permissões.' 
      } 
     */
 
-    /** #swagger.responses[5xx] = {
+    /** #swagger.responses[500] = {
         schema: { $ref: "#/definitions/Error500" },
         description: 'Erro interno.' 
      }

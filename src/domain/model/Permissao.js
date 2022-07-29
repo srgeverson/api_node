@@ -22,7 +22,7 @@ class Permissao extends Model {
     static associate(models) {
         this.belongsToMany(models.Usuario, {
             through: 'usuarios_permissoes',
-            foreignKey: 'usuarioId',
+            foreignKey: 'permissaoId',
             as: 'usuarios'
         });
     }

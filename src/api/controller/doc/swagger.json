@@ -11,6 +11,10 @@
     {
       "name": "Permissões",
       "description": "Gerencia o cadastro de permissões."
+    },
+    {
+      "name": "Usuários",
+      "description": "Gerencia o cadastro de usuários."
     }
   ],
   "schemes": [
@@ -30,6 +34,53 @@
             "schema": {
               "$ref": "#/definitions/Permissoes"
             }
+          },
+          "401": {
+            "schema": {
+              "$ref": "#/definitions/Error401"
+            },
+            "description": "Não autorizado."
+          },
+          "403": {
+            "schema": {
+              "$ref": "#/definitions/Error403"
+            },
+            "description": "Sem premissão."
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/Error500"
+            },
+            "description": "Erro interno."
+          }
+        }
+      }
+    },
+    "/v1/usuarios": {
+      "get": {
+        "tags": [
+          "Usuários"
+        ],
+        "description": "Lista de todos usuários cadastrados.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Lista de usuários.",
+            "schema": {
+              "$ref": "#/definitions/Usuarios"
+            }
+          },
+          "401": {
+            "schema": {
+              "$ref": "#/definitions/Error401"
+            },
+            "description": "Não autorizado."
+          },
+          "403": {
+            "schema": {
+              "$ref": "#/definitions/Error403"
+            },
+            "description": "Sem premissão."
           },
           "500": {
             "schema": {
@@ -57,7 +108,27 @@
           },
           "descricao": {
             "type": "string",
-            "example": "Permissão de funcionário"
+            "example": "Permissão de funcionário."
+          },
+          "ativo": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      }
+    },
+    "Usuarios": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "nome": {
+            "type": "string",
+            "example": "login@email.com"
           },
           "ativo": {
             "type": "boolean",
@@ -71,7 +142,7 @@
       "properties": {
         "status": {
           "type": "string",
-          "example": "error"
+          "example": "informativo"
         },
         "statusCode": {
           "type": "number",
@@ -79,7 +150,58 @@
         },
         "message": {
           "type": "string",
-          "example": "ErrorMessage"
+          "example": "Solicitação está no formato incorreto."
+        }
+      }
+    },
+    "Error401": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "informativo"
+        },
+        "statusCode": {
+          "type": "number",
+          "example": 401
+        },
+        "message": {
+          "type": "string",
+          "example": "Acesso não autorizado."
+        }
+      }
+    },
+    "Error403": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "atênção"
+        },
+        "statusCode": {
+          "type": "number",
+          "example": 403
+        },
+        "message": {
+          "type": "string",
+          "example": "Permissão negada."
+        }
+      }
+    },
+    "Error404": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "atênção"
+        },
+        "statusCode": {
+          "type": "number",
+          "example": 404
+        },
+        "message": {
+          "type": "string",
+          "example": "Dados não encontrados."
         }
       }
     },
@@ -88,7 +210,7 @@
       "properties": {
         "status": {
           "type": "string",
-          "example": "error"
+          "example": "erro"
         },
         "statusCode": {
           "type": "number",
@@ -96,7 +218,7 @@
         },
         "message": {
           "type": "string",
-          "example": "ErrorMessage"
+          "example": "Erro interno, contate o administrador do sistema."
         }
       }
     }

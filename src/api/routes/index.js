@@ -5,12 +5,16 @@ const swaggerFile = require('../controller/doc/swagger.json');
 const swaggerUi = require('swagger-ui-express');
 
 import PermissaoController from '../controller/PermissaoController';
+import UsuarioController from '../controller/UsuarioController';
 
 const routes = Router();
 
 const permissaoController = new PermissaoController();
+const usuarioController = new UsuarioController();
 
 routes.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+
+//#region Permissão
 
 routes.get(`/v1/permissoes`, asyncHandler(async (request, response) => {
     // #swagger.tags = ['Permissões']
@@ -22,12 +26,60 @@ routes.get(`/v1/permissoes`, asyncHandler(async (request, response) => {
      } 
     */
 
+    /** #swagger.responses[401] = {
+        schema: { $ref: "#/definitions/Error401" },
+        description: 'Não autorizado.' 
+     } 
+    */
+
+    /** #swagger.responses[403] = {
+        schema: { $ref: "#/definitions/Error403" },
+        description: 'Sem premissão.' 
+     } 
+    */
+
     /** #swagger.responses[500] = {
         schema: { $ref: "#/definitions/Error500" },
         description: 'Erro interno.' 
      }
      */
     return await permissaoController.todasPermissoes(request, response);
-}))
+}));
+
+//#endregion
+
+//#region Usuário
+
+routes.get(`/v1/usuarios`, asyncHandler(async (request, response) => {
+    // #swagger.tags = ['Usuários']
+    // #swagger.description = 'Lista de todos usuários cadastrados.'
+
+    /** #swagger.responses[200] = {
+        schema: { $ref: "#/definitions/Usuarios" },
+        description: 'Lista de usuários.' 
+     } 
+    */
+
+    /** #swagger.responses[401] = {
+        schema: { $ref: "#/definitions/Error401" },
+        description: 'Não autorizado.' 
+     } 
+    */
+
+    /** #swagger.responses[403] = {
+        schema: { $ref: "#/definitions/Error403" },
+        description: 'Sem premissão.' 
+     } 
+    */
+
+    /** #swagger.responses[500] = {
+        schema: { $ref: "#/definitions/Error500" },
+        description: 'Erro interno.' 
+     }
+     */
+    return await usuarioController.todosUsuarios(request, response);
+}));
+
+//#endregion
 
 export { routes }

@@ -12,24 +12,48 @@ const docs = {
         {
             name: 'Permissões',
             description: 'Gerencia o cadastro de permissões.'
+        },
+        {
+            name: 'Usuários',
+            description: 'Gerencia o cadastro de usuários.'
         }
     ],
     definitions: {
         Permissoes: [{
             id: 1,
             nome: 'funcionario',
-            descricao: "Permissão de funcionário",
+            descricao: "Permissão de funcionário.",
+            ativo: true
+        }],
+        Usuarios: [{
+            id: 1,
+            nome: 'login@email.com',
             ativo: true
         }],
         Error400: {
-            status: 'error',
+            status: 'informativo',
             statusCode: 400,
-            message: 'ErrorMessage'
+            message: 'Solicitação está no formato incorreto.'
+        },
+        Error401: {
+            status: 'informativo',
+            statusCode: 401,
+            message: 'Acesso não autorizado.'
+        },
+        Error403: {
+            status: 'atênção',
+            statusCode: 403,
+            message: 'Permissão negada.'
+        },
+        Error404: {
+            status: 'atênção',
+            statusCode: 404,
+            message: 'Dados não encontrados.'
         },
         Error500: {
-            status: 'error',
+            status: 'erro',
             statusCode: 500,
-            message: 'ErrorMessage'
+            message: 'Erro interno, contate o administrador do sistema.'
         }
     }
 }

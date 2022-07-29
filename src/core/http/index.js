@@ -1,18 +1,41 @@
 import express from 'express';
-import cors from 'cors';
-import { createServer } from 'http';
-import '../database';
 import { routes } from '../../api/routes';
+import cors from 'cors';
+import path from 'path';
+import '../../domain/model';
 import { handleError } from '../helpers/error';
 
-const app = express();
-app.use(cors());
-app.use(express.json());
-app.use(routes);
-app.use((err, req, res, next) => {
-    handleError(err, res);
-});
+class Http {
 
-const http = createServer(app);
+    constructor() {
+        this.app = express();
+        this.middlewares();
+        this.routes();
+    }
 
-export { http }
+    middlewares() {
+        this.app.use(express.json());
+
+        //Publicando fotos
+        this.app.use(
+            '/imagens',
+            express.static(path.resolve(__dirname, "..", "..", "infrastructure", "tmp", "enviados"))
+        );
+
+        //Configuração do CORS
+        this.app.use((err, req, res, next) => {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Methods", 'GET, PUT, POST, DELETE');
+            res.header("Access-Control-Allow-Headers", 'X-PINGOTHER, Content-Type, Authorization');
+            this.app.use(cors());
+            handleError(err, res);
+            next();
+        })
+    }
+
+    routes() {
+        this.app.use(routes);
+    }
+}
+
+export default Http;

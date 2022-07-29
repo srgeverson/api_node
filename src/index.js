@@ -1,7 +1,9 @@
-import { http } from './core/http';
+import Http from './core/http';
 
 const PORT = process.env.PORT || 8080;
 const HOST = process.env.SERVER_URL || 'localhost';
+
+const http = new Http().app;
 
 http.listen(PORT, () => {
     console.log(`O IP da aplicação é ${HOST}.`);

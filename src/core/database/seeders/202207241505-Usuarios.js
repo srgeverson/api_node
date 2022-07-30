@@ -1,21 +1,29 @@
 'use strict';
+const moment = require('moment-timezone');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert('usuarios', [
       {
         id: 1,
-        nome: 'geversonjosedesouza@gmail.com',
+        nome: 'Admin',
+        email: 'geversonjosedesouza@gmail.com',
         senha: '123456',
-        ativo: true
+        ativo: true,
+        codigo_acesso: null,
+        data_cadastro: moment.utc().format('YYYY-MM-DD HH:mm:ss'),
+        data_ultimo_acesso: null
       },
       {
         id: 2,
-        nome: 'geversonjosedesouza@hotmail.com',
+        nome: 'Geverson',
+        email: 'geversonjosedesouza@hotmail.com',
         senha: '123456',
-        ativo: true
-      },
-
+        ativo: true,
+        codigo_acesso: null,
+        data_cadastro: moment.utc().format('YYYY-MM-DD HH:mm:ss'),
+        data_ultimo_acesso: null,
+      }
     ], {})
   },
 

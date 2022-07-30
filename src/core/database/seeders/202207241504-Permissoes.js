@@ -6,14 +6,38 @@ module.exports = {
       [
         {
           id: 1,
-          nome: 'manager',
-          descricao: 'Permissão de Gerente',
+          nome: 'listar_permissao',
+          descricao: 'Permite visualizar todas as permissões.',
           ativo: true
         },
         {
           id: 2,
-          nome: 'employee',
-          descricao: 'Permissão de Funcionário',
+          nome: 'listar_usuario',
+          descricao: 'Permite visualizar todos os usuários.',
+          ativo: true
+        },
+        {
+          id: 3,
+          nome: 'editar_usuario',
+          descricao: 'Permite editar usuário.',
+          ativo: true
+        },
+        {
+          id: 4,
+          nome: 'cadastrar_usuario',
+          descricao: 'Permite cadastrar usuário.',
+          ativo: true
+        },
+        {
+          id: 5,
+          nome: 'excluir_usuario',
+          descricao: 'Permite excluir usuário.',
+          ativo: true
+        },
+        {
+          id: 6,
+          nome: 'proprio_usuario',
+          descricao: 'Permite acesso aos recursos apenas do perfil do próprio usuário.',
           ativo: true
         },
       ], {})

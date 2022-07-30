@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     return queryInterface.createTable('usuarios', {
@@ -10,6 +8,10 @@ module.exports = {
         autoIncrement: true,
       },
       nome: {
+        type: Sequelize.STRING(80),
+        allowNull: true
+      },
+      email: {
         type: Sequelize.STRING(255),
         allowNull: false,
         unique: true
@@ -22,7 +24,21 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: true
-      }
+      },
+      codigo_acesso: {
+        type: Sequelize.STRING(10),
+        allowNull: true
+      },
+      data_cadastro: {
+        type: 'TIMESTAMP',
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: true
+      },
+      data_ultimo_acesso: {
+        type: 'TIMESTAMP',
+        defaultValue: null,
+        allowNull: true
+      },
     })
   },
 

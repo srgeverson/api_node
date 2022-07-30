@@ -73,7 +73,8 @@ class UsuarioService {
     }
 
     async buscarPorId(id) {
-        if (!Number(id))
+
+        if (isNaN(id))
             return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Id de usuário não é válido.');
 
         const usuario = await this.usuarioRepository
@@ -109,23 +110,24 @@ class UsuarioService {
     async alterarUsuario(usuario) {
 
         const usuarioEncontrado = await this.buscarPorId(usuario.id);
-        if (!usuarioEncontrado)
-            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Usuário não encontrado.');
+        
+        if (usuarioEncontrado.statusCode)
+            return usuarioEncontrado;
 
         if (!usuario.email)
             return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Nome de usuário não informado.');
 
-        const usuarioExistente = await this.buscarPorEmail(usuario.nome);
+        const usuarioExistente = await this.buscarPorEmail(usuario.email);
         if (usuarioExistente)
-            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Já existe um usuário cadastrado com esse nome.');
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Já existe um usuário cadastrado com esse email.');
 
         return await this.usuarioRepository
-            .saveUsuarioComSenha(usuario)
-            .then(async usuario => {
-                return usuario;
+            .updateUsuario(usuario)
+            .then(async id => {
+                return this.buscarPorId(id);
             })
-            .catch(() => {
-                return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao alterar usuário com senha.');
+            .catch((err) => {
+                return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao alterar usuário o senha.');
             });
     }
 }

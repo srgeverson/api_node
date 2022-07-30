@@ -53,13 +53,12 @@ class UsuarioController {
 
     async alterarUsuario(request, response) {
         const { id } = request.params;
-        const { nome, senha } = request.body;
-        console.log({ id, nome, senha });
-        const usuarioAlterado = await this.usuarioService.alterarUsuario({ id, nome, senha });
+        const { nome, email, ativo } = request.body;
+        const usuarioAlterado = await this.usuarioService.alterarUsuario({ id, nome, email, ativo });
         if (usuarioAlterado.statusCode)
             return response.status(usuarioAlterado.statusCode).json(usuarioAlterado);
         else
-            return response.status(StatusCode.SuccessOK).json(usuarioAlterado.statusCode);
+            return response.status(StatusCode.SuccessOK).json(usuarioAlterado);
     }
 }
 

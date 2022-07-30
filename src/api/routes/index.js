@@ -201,10 +201,10 @@ routes.put(`/v1/usuarios/:id`, asyncHandler(async (request, response) => {
     // #swagger.description = 'Altera usuário por id.'
 
     //  #swagger.parameters['id'] = { description: 'Id do usuário.' },
-    /*  #swagger.parameters['UsuarioComSenha'] = {
+    /*  #swagger.parameters['AlterarUsuario'] = {
         in: 'body',
         description: 'Cadastrar usuário com senha.',
-        schema: { $ref: '#/definitions/UsuarioComSenha' }
+        schema: { $ref: '#/definitions/AlterarUsuario' }
     } */
 
     /** #swagger.responses[200] = {

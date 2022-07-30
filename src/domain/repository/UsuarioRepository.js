@@ -43,6 +43,22 @@ class UsuarioRepository {
             ativo: true
         });
     }
+
+    async updateUsuario(usuario) {
+        return await Usuario.update(
+            {
+                nome: usuario.nome,
+                email: usuario.email,
+                data_ultimo_acesso: moment.utc().format('YYYY-MM-DD HH:mm:ss'),
+                ativo: true
+            },
+            {
+                where: {
+                    id: usuario.id
+                }
+            }
+        );
+    }
 }
 
 export default UsuarioRepository;

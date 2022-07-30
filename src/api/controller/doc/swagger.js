@@ -48,7 +48,8 @@ const docs = {
         },
         AlterarUsuario: {
             nome: 'meu  nome/apelido',
-            email: 'login@email.com'
+            email: 'login@email.com',
+            ativo: false
         },
         AlterarSenha: {
             email: 'login@email.com',

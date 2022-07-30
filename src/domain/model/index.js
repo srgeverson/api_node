@@ -2,8 +2,9 @@ import Sequelize from 'sequelize';
 import database from '../../core/database';
 import Permissao from './Permissao';
 import Usuario from './Usuario';
+import Log from './Log';
 
-const models = [Permissao, Usuario];
+const models = [Permissao, Usuario, Log];
 
 class Database {
   constructor() {

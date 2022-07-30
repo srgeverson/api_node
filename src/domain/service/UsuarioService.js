@@ -35,8 +35,14 @@ class UsuarioService {
         if (usuarioExistente)
             return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Já existe um usuário cadastrado com esse email.');
 
+        const senha = await bcrypt.hash(usuario.senha, 12);
+
         return await this.usuarioRepository
-            .saveUsuarioComSenha(usuario)
+            .saveUsuarioComSenha({
+                nome: usuario.nome,
+                email: usuario.email,
+                senha: senha
+            })
             .then(async usuario => {
                 return {
                     id: usuario.id,
@@ -112,7 +118,7 @@ class UsuarioService {
     async alterarUsuario(usuario) {
 
         const usuarioEncontrado = await this.buscarPorId(usuario.id);
-        
+
         if (usuarioEncontrado.statusCode)
             return usuarioEncontrado;
 
@@ -136,7 +142,7 @@ class UsuarioService {
     async ativarOuDesativarUsuario(usuario) {
 
         const usuarioEncontrado = await this.buscarPorId(usuario.id);
-        
+
         if (usuarioEncontrado.statusCode)
             return usuarioEncontrado;
 
@@ -156,7 +162,7 @@ class UsuarioService {
     async todasPermissoesDoUsuario(usuario) {
 
         const usuarioEncontrado = await this.buscarPorId(usuario.id);
-        
+
         if (usuarioEncontrado.statusCode)
             return usuarioEncontrado;
 

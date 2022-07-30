@@ -247,11 +247,11 @@
             "description": "Id do usuário."
           },
           {
-            "name": "UsuarioComSenha",
+            "name": "AlterarUsuario",
             "in": "body",
             "description": "Cadastrar usuário com senha.",
             "schema": {
-              "$ref": "#/definitions/UsuarioComSenha"
+              "$ref": "#/definitions/AlterarUsuario"
             }
           }
         ],
@@ -261,6 +261,86 @@
               "$ref": "#/definitions/Usuario"
             },
             "description": "Usuário alterado."
+          },
+          "401": {
+            "schema": {
+              "$ref": "#/definitions/Error401"
+            },
+            "description": "Não autorizado."
+          },
+          "403": {
+            "schema": {
+              "$ref": "#/definitions/Error403"
+            },
+            "description": "Sem premissão."
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/Error500"
+            },
+            "description": "Erro interno."
+          }
+        }
+      }
+    },
+    "/v1/usuarios/desativa/{id}": {
+      "put": {
+        "tags": [
+          "Usuários"
+        ],
+        "description": "Desativa usuário por id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id do usuário."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Usuário desativado."
+          },
+          "401": {
+            "schema": {
+              "$ref": "#/definitions/Error401"
+            },
+            "description": "Não autorizado."
+          },
+          "403": {
+            "schema": {
+              "$ref": "#/definitions/Error403"
+            },
+            "description": "Sem premissão."
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/Error500"
+            },
+            "description": "Erro interno."
+          }
+        }
+      }
+    },
+    "/v1/usuarios/ativa/{id}": {
+      "put": {
+        "tags": [
+          "Usuários"
+        ],
+        "description": "Ativa usuário por id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id do usuário."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Usuário ativado."
           },
           "401": {
             "schema": {
@@ -394,6 +474,10 @@
         "email": {
           "type": "string",
           "example": "login@email.com"
+        },
+        "ativo": {
+          "type": "boolean",
+          "example": false
         }
       }
     },

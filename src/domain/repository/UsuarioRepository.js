@@ -59,6 +59,19 @@ class UsuarioRepository {
             }
         );
     }
+
+    async updateUsuarioAtivo(usuario) {
+        return await Usuario.update(
+            {
+                ativo: usuario.ativo
+            },
+            {
+                where: {
+                    id: usuario.id
+                }
+            }
+        );
+    }
 }
 
 export default UsuarioRepository;

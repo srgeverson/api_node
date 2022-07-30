@@ -60,6 +60,24 @@ class UsuarioController {
         else
             return response.status(StatusCode.SuccessOK).json(usuarioAlterado);
     }
+
+    async desativarUsuario(request, response) {
+        const { id } = request.params;
+        const usuarioDesativado = await this.usuarioService.ativarOuDesativarUsuario({ id, ativo: false });
+        if (usuarioDesativado.statusCode)
+            return response.status(usuarioDesativado.statusCode).json(usuarioDesativado);
+        else
+            return response.status(StatusCode.SuccessNoContent).json(usuarioDesativado);
+    }
+
+    async ativarUsuario(request, response) {
+        const { id } = request.params;
+        const usuarioAtivado = await this.usuarioService.ativarOuDesativarUsuario({ id, ativo: true });
+        if (usuarioAtivado.statusCode)
+            return response.status(usuarioAtivado.statusCode).json(usuarioAtivado);
+        else
+            return response.status(StatusCode.SuccessNoContent).json(usuarioAtivado);
+    }
 }
 
 export default UsuarioController;

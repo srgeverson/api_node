@@ -126,7 +126,27 @@ class UsuarioService {
             .then(async id => {
                 return this.buscarPorId(id);
             })
-            .catch((err) => {
+            .catch(() => {
+                return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao alterar usuário o senha.');
+            });
+    }
+
+    async ativarOuDesativarUsuario(usuario) {
+
+        const usuarioEncontrado = await this.buscarPorId(usuario.id);
+        
+        if (usuarioEncontrado.statusCode)
+            return usuarioEncontrado;
+
+        if (usuario.ativo === usuarioEncontrado.ativo)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Usuário já encontrase ativado/desativado.');
+
+        return await this.usuarioRepository
+            .updateUsuarioAtivo(usuario)
+            .then(async id => {
+                return id;
+            })
+            .catch(() => {
                 return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao alterar usuário o senha.');
             });
     }

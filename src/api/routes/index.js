@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import asyncHandler from 'express-async-handler';
+import auth from '../../core/auth';
 
 const swaggerFile = require('../controller/doc/swagger.json');
 const swaggerUi = require('swagger-ui-express');
@@ -92,7 +93,7 @@ routes.post(`/v1/usuarios/token`, asyncHandler(async (request, response) => {
     return await usuarioController.login(request, response);
 }));
 
-routes.get(`/v1/usuarios`, asyncHandler(async (request, response) => {
+routes.get(`/v1/usuarios`, auth, asyncHandler(async (request, response) => {
     // #swagger.tags = ['Usuários']
     // #swagger.description = 'Lista de todos usuários cadastrados.'
 

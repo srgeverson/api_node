@@ -52,11 +52,11 @@ routes.get(`/v1/permissoes`, asyncHandler(async (request, response) => {
 
 routes.post(`/v1/usuarios/token`, asyncHandler(async (request, response) => {
     // #swagger.tags = ['Usuários']
-    // #swagger.description = 'Cadastrar um usuário com senha.'
+    // #swagger.description = 'Gerar token de acesso para o usuário.'
 
     /*  #swagger.parameters['UsuarioLogin'] = {
         in: 'body',
-        description: 'Cadastrar usuário sem senha.',
+        description: 'Credenciais para geração do token de acesso.',
         schema: { $ref: '#/definitions/UsuarioLogin' }
     } */
 

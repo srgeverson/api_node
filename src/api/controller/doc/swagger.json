@@ -56,6 +56,56 @@
         }
       }
     },
+    "/v1/usuarios/token": {
+      "post": {
+        "tags": [
+          "Usuários"
+        ],
+        "description": "Gerar token de acesso para o usuário.",
+        "parameters": [
+          {
+            "name": "UsuarioLogin",
+            "in": "body",
+            "description": "Credenciais para geração do token de acesso.",
+            "schema": {
+              "$ref": "#/definitions/UsuarioLogin"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/UsuarioAutenticado"
+            },
+            "description": "Usuário autenticado."
+          },
+          "401": {
+            "schema": {
+              "$ref": "#/definitions/Error401"
+            },
+            "description": "Não autorizado."
+          },
+          "403": {
+            "schema": {
+              "$ref": "#/definitions/Error403"
+            },
+            "description": "Sem premissão."
+          },
+          "409": {
+            "schema": {
+              "$ref": "#/definitions/Error409"
+            },
+            "description": "Duplicidade de dados."
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/Error500"
+            },
+            "description": "Erro interno."
+          }
+        }
+      }
+    },
     "/v1/usuarios": {
       "get": {
         "tags": [
@@ -591,6 +641,40 @@
         }
       }
     },
+    "UsuarioLogin": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "login@email.com"
+        },
+        "senha": {
+          "type": "string",
+          "example": "654321"
+        }
+      }
+    },
+    "UsuarioAutenticado": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "example": 1
+        },
+        "nome": {
+          "type": "string",
+          "example": "nome/apelido"
+        },
+        "expiresIn": {
+          "type": "number",
+          "example": 21000
+        },
+        "access_token": {
+          "type": "string",
+          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+        }
+      }
+    },
     "Informativo": {
       "type": "object",
       "properties": {
@@ -665,6 +749,23 @@
         "message": {
           "type": "string",
           "example": "Dados não encontrados."
+        }
+      }
+    },
+    "Error409": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "atênção"
+        },
+        "statusCode": {
+          "type": "number",
+          "example": 409
+        },
+        "message": {
+          "type": "string",
+          "example": "Violação da integridade de dados."
         }
       }
     },

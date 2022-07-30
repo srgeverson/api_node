@@ -9,7 +9,11 @@ Antes de começar, você vai precisar ter instalado em sua máquina as seguintes
 [Git](https://git-scm.com) e [Node.js](https://nodejs.org/en/) 
 Além disto é bom ter um editor para trabalhar com o código como [VSCode](https://code.visualstudio.com/)
 
-💡Esta aplicação usa um tokem gerado pelo [MD5 Hash Generator](https://passwordsgenerator.net/md5-hash-generator/).
+💡A chave secreta de validação do token é uma palavra encriptada pelo [MD5 Hash Generator](https://www.md5hashgenerator.com/).
+
+💡As senhas de dados iniciais foram encriptada pelo [Bcrypt-Generator.com](https://bcrypt-generator.com/).
+
+💡Os tokens gerados pode ser validado pelo [JWT.io](https://jwt.io/).
 
 ## 🚀 Comandos executados durante o desenvolvimento.
 
@@ -57,11 +61,11 @@ $ npm install pg pg-hstore --save
 $ npm install reflect-metadata --save
 
 # Crie um banco de dados e adicione ao arquivo .env na raiz do projeto as seguintes configurações:
-$ DATABASE_DIALECT=dialect
-$ DATABASE_NAME=database-name
-$ DATABASE_HOST=localhost
-$ DATABASE_USERNAME=username
-$ DATABASE_PASSWORD=password
+$ DATABASE_DIALECT='dialect do seu banco de dados.'
+$ DATABASE_NAME='Nome do banco de dados criado.'
+$ DATABASE_HOST='Endereço IP do banco de dados.'
+$ DATABASE_USERNAME='Usuário do banco de dados.'
+$ DATABASE_PASSWORD='Senha do banco de dados.'
 
 💡 As tabelas e os dados inicias da aplicação estão dentro das pastas /api_node/src/core/database/migraions e /api_node/src/core/database/seeders respectivamente.
 
@@ -82,6 +86,16 @@ $ npm install swagger-ui-express --save
 
 ### Gerando ducumentação swagger.
 $ npm run swagger-autogen
+
+### Criptografar a senha
+$ npm install bcryptjs --save
+
+### Validar requisições com JWT
+$ npm install jsonwebtoken --save
+
+# Adicione ao arquivo .env na raiz do projeto as seguintes configurações:
+$ KEY_SECRET='Chave secreta encriptada pelo site mencionado no início das instruções.'
+$ EXPIRES_IN='Tempo de expiração do token.'
 
 ```
 

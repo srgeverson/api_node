@@ -70,6 +70,16 @@ const docs = {
                 }]
             },
         },
+        UsuarioLogin: {
+            email: 'login@email.com',
+            senha: '654321',
+        },
+        UsuarioAutenticado: {
+            id: 1,
+            nome: 'nome/apelido',
+            expiresIn: 21000,
+            access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+        },
         Informativo: { mensagem: 'Informação da operação.' },
         Error400: {
             status: 'informativo',

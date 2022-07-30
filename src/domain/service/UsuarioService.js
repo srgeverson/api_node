@@ -1,6 +1,8 @@
 import { StatusCode } from 'status-code-enum';
 import UsuarioRepository from '../repository/UsuarioRepository';
 import { ErrorHandler } from '../../core/helpers/error';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 class UsuarioService {
 
@@ -166,6 +168,45 @@ class UsuarioService {
             .catch((err) => {
                 return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao pesquisar as permissões do usuário.');
             });
+    }
+
+    async validarAcesso(usuario) {
+        if (!usuario.email)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'E-mail de usuário não informado.');
+
+        if (!usuario.senha)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Senha de usuário não informado.');
+
+        const usuarioExistente = await this.buscarPorEmail(usuario.email);
+        if (!usuarioExistente)
+            return new ErrorHandler(StatusCode.ClientErrorUnauthorized, 'E-mail inválido ou usuário não existe.');
+
+        if (!await bcrypt.compare(usuario.senha, usuarioExistente.senha))
+            return new ErrorHandler(StatusCode.ClientErrorUnauthorized, 'Senha inválida.');
+
+        const permissoesUsuario = await this.usuarioRepository.findPermissoesByEmail(usuario);
+        const expiresIn = parseInt(process.env.EXPIRES_IN);
+        const chave = process.env.KEY_SECRET;
+        const permissoes = permissoesUsuario.permissoes.map(permissao => permissao.ativo && permissao.nome);
+
+        await this.usuarioRepository.updateDataDeAcesso(usuario);
+
+        return {
+            id: usuarioExistente.id,
+            nome: usuarioExistente.nome,
+            expiresIn,
+            access_token: jwt.sign(
+                {
+                    id: usuarioExistente.id,
+                    name: usuarioExistente.nome,
+                    roles: permissoes
+                },
+                chave,
+                { expiresIn }
+            ),
+        }
+
+
     }
 }
 

@@ -87,6 +87,15 @@ class UsuarioController {
         else
             return response.status(StatusCode.SuccessOK).json(permissoesDoUsuario);
     }
+
+    async login(request, response) {
+        const { email, senha } = request.body;
+        const usuarioAutorizado = await this.usuarioService.validarAcesso({ email, senha });
+        if (usuarioAutorizado.statusCode)
+            return response.status(usuarioAutorizado.statusCode).json(usuarioAutorizado);
+        else
+            return response.status(StatusCode.SuccessOK).json(usuarioAutorizado);
+    }
 }
 
 export default UsuarioController;

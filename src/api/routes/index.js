@@ -50,6 +50,48 @@ routes.get(`/v1/permissoes`, asyncHandler(async (request, response) => {
 
 //#region Usuário
 
+routes.post(`/v1/usuarios/token`, asyncHandler(async (request, response) => {
+    // #swagger.tags = ['Usuários']
+    // #swagger.description = 'Cadastrar um usuário com senha.'
+
+    /*  #swagger.parameters['UsuarioLogin'] = {
+        in: 'body',
+        description: 'Cadastrar usuário sem senha.',
+        schema: { $ref: '#/definitions/UsuarioLogin' }
+    } */
+
+    /** #swagger.responses[200] = {
+        schema: { $ref: "#/definitions/UsuarioAutenticado" },
+        description: 'Usuário autenticado.' 
+     } 
+    */
+
+    /** #swagger.responses[401] = {
+        schema: { $ref: "#/definitions/Error401" },
+        description: 'Não autorizado.' 
+     } 
+    */
+
+    /** #swagger.responses[403] = {
+        schema: { $ref: "#/definitions/Error403" },
+        description: 'Sem premissão.' 
+     } 
+    */
+
+    /** #swagger.responses[409] = {
+        schema: { $ref: "#/definitions/Error409" },
+        description: 'Duplicidade de dados.' 
+     } 
+    */
+
+    /** #swagger.responses[500] = {
+        schema: { $ref: "#/definitions/Error500" },
+        description: 'Erro interno.' 
+     }
+     */
+    return await usuarioController.login(request, response);
+}));
+
 routes.get(`/v1/usuarios`, asyncHandler(async (request, response) => {
     // #swagger.tags = ['Usuários']
     // #swagger.description = 'Lista de todos usuários cadastrados.'

@@ -89,6 +89,36 @@ class UsuarioRepository {
             },
         });
     }
+    
+    async findPermissoesByEmail(usuario) {
+        return await Usuario.findOne({
+            attributes: [],
+            include: [{
+                model: Permissao,
+                as: 'permissoes',
+                attributes: ['nome', 'ativo'],
+                through: {
+                    attributes: []
+                }
+            }],
+            where: {
+                email: usuario.email
+            },
+        });
+    }
+
+    async updateDataDeAcesso(usuario) {
+        return await Usuario.update(
+            {
+                data_ultimo_acesso: moment.utc().format('YYYY-MM-DD HH:mm:ss Z')
+            },
+            {
+                where: {
+                    email: usuario.email
+                }
+            }
+        );
+    }
 }
 
 export default UsuarioRepository;

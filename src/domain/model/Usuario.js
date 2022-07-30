@@ -1,4 +1,4 @@
-import Sequelize, { Model } from 'sequelize';
+import Sequelize, { Model, DataType, DataTypes } from 'sequelize';
 
 class Usuario extends Model {
 
@@ -6,9 +6,13 @@ class Usuario extends Model {
         super.init(
             {
                 id: { type: Sequelize.INTEGER, allowNull: false, primaryKey: true, autoIncrement: true, },
-                nome: { type: Sequelize.STRING(255), allowNull: false, unique: true },
+                nome: { type: Sequelize.STRING(80), allowNull: true },
+                email: { type: Sequelize.STRING(255), allowNull: false, unique: true },
                 senha: { type: Sequelize.STRING(255), allowNull: false },
-                ativo: { type: Sequelize.BOOLEAN, allowNUll: false, defaultValue: true }
+                ativo: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: true },
+                codigo_acesso: { type: Sequelize.STRING(10), allowNull: true },
+                data_cadastro: { type: 'TIMESTAMP', allowNull: false, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP') },
+                data_ultimo_acesso: { type: 'TIMESTAMP', allowNull: false, defaultValue: Sequelize.literal('CURRENT_TIMESTAMP') },
             },
             {
                 sequelize,

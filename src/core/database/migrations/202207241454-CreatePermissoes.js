@@ -5,7 +5,6 @@ module.exports = {
     return queryInterface.createTable('permissoes', {
       id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         primaryKey: true,
         autoIncrement: true,
       },

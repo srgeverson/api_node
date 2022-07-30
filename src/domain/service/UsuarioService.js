@@ -23,7 +23,99 @@ class UsuarioService {
         if (!usuario.nome)
             return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Nome de usuário não informado.');
 
-        const usuarioExistente = await this.usuarioRepository.findByNome(usuario.nome);
+        if (!usuario.email)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'E-mail de usuário não informado.');
+
+        if (!usuario.senha)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Senha de usuário não informado.');
+
+        const usuarioExistente = await this.usuarioRepository.findByEmail(usuario.email);
+        if (usuarioExistente)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Já existe um usuário cadastrado com esse email.');
+
+        return await this.usuarioRepository
+            .saveUsuarioComSenha(usuario)
+            .then(async usuario => {
+                return {
+                    id: usuario.id,
+                    nome: usuario.nome,
+                    email: usuario.email,
+                    ativo: usuario.ativo
+                }
+            })
+            .catch(() => {
+                return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao cadastrar usuario com senha.');
+            });
+    }
+
+    async cadastrarUsuarioSemSenha(usuario) {
+        if (!usuario.nome)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Nome de usuário não informado.');
+
+        if (!usuario.email)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'E-mail de usuário não informado.');
+
+        const usuarioExistente = await this.usuarioRepository.findByEmail(usuario.email);
+        if (usuarioExistente)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Já existe um usuário cadastrado com esse email.');
+
+        let usuarioComCodigoAcesso = { ...usuario, ...{ codigoAcesso: Math.random().toString(36).substr(3, 10) } };
+        return await this.usuarioRepository
+            .saveUsuarioSemSenha(usuarioComCodigoAcesso)
+            .then(async () => {
+                return {
+                    mensagem: "Senha enviada por email, confira e siga as intruções."
+                }
+            })
+            .catch(() => {
+                return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao cadastrar usuario com senha.');
+            });
+    }
+
+    async buscarPorId(id) {
+        if (!Number(id))
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Id de usuário não é válido.');
+
+        const usuario = await this.usuarioRepository
+            .findById(id)
+            .then(async usuario => {
+                return usuario;
+            })
+            .catch(() => {
+                return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao consultar usuario por id.');
+            });
+        if (usuario)
+            return {
+                id: usuario.id,
+                nome: usuario.nome,
+                email: usuario.email,
+                ativo: usuario.ativo
+            }
+        else
+            return new ErrorHandler(StatusCode.ClientErrorNotFound, `Não foi encontrado usuário com o id = ${id}.`);
+    }
+
+    async buscarPorEmail(email) {
+        return await this.usuarioRepository
+            .findByEmail(email)
+            .then(async usuario => {
+                return usuario;
+            })
+            .catch(() => {
+                return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao consultar usuario por email.');
+            });
+    }
+
+    async alterarUsuario(usuario) {
+
+        const usuarioEncontrado = await this.buscarPorId(usuario.id);
+        if (!usuarioEncontrado)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Usuário não encontrado.');
+
+        if (!usuario.email)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Nome de usuário não informado.');
+
+        const usuarioExistente = await this.buscarPorEmail(usuario.nome);
         if (usuarioExistente)
             return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Já existe um usuário cadastrado com esse nome.');
 
@@ -33,20 +125,9 @@ class UsuarioService {
                 return usuario;
             })
             .catch(() => {
-                return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao cadastrar usuario com senha.');
+                return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao alterar usuário com senha.');
             });
     }
-
-    // async buscarPorNome(nome) {
-    //     return await this.usuarioRepository
-    //         .findByNome(nome)
-    //         .then(async usuario => {
-    //             return usuario;
-    //         })
-    //         .catch(() => {
-    //             return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao consultar usuario por nome.');
-    //         });
-    // }
 }
 
 export default UsuarioService;

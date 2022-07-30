@@ -27,13 +27,35 @@ const docs = {
         }],
         Usuarios: [{
             id: 1,
-            nome: 'login@email.com',
+            nome: 'meu  nome/apelido',
+            email: 'login@email.com',
             ativo: true
         }],
         UsuarioComSenha: {
-            nome: 'login@email.com',
-            senha: '123456',
+            nome: 'meu  nome/apelido',
+            email: 'login@email.com',
+            senha: '123456'
         },
+        UsuarioSemSenha: {
+            nome: 'meu  nome/apelido',
+            email: 'login@email.com'
+        },
+        Usuario: {
+            id: 1,
+            nome: 'meu  nome/apelido',
+            email: 'login@email.com',
+            ativo: true
+        },
+        AlterarUsuario: {
+            nome: 'meu  nome/apelido',
+            email: 'login@email.com'
+        },
+        AlterarSenha: {
+            email: 'login@email.com',
+            senhaAntiga: '123456',
+            senhaNova: '654321',
+        },
+        Informativo: { mensagem: 'Informação da operação.' },
         Error400: {
             status: 'informativo',
             statusCode: 400,

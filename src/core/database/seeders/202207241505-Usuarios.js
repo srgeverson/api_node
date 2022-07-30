@@ -11,7 +11,6 @@ module.exports = {
         senha: '123456',
         ativo: true,
         codigo_acesso: null,
-        data_cadastro: moment.utc().format('YYYY-MM-DD HH:mm:ss'),
         data_ultimo_acesso: null
       },
       {
@@ -21,7 +20,6 @@ module.exports = {
         senha: '123456',
         ativo: true,
         codigo_acesso: null,
-        data_cadastro: moment.utc().format('YYYY-MM-DD HH:mm:ss'),
         data_ultimo_acesso: null,
       }
     ], {})

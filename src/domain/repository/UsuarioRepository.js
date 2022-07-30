@@ -6,7 +6,7 @@ class UsuarioRepository {
 
     async findAll() {
         return await Usuario.findAll({
-            attributes: ['id', 'nome', 'email', 'ativo', 'data_cadastro', 'data_ultimo_acesso']
+            attributes: ['id', 'nome', 'email', 'ativo']
         });
     }
 
@@ -31,8 +31,16 @@ class UsuarioRepository {
             nome: usuario.nome,
             email: usuario.email,
             senha: usuario.senha,
-            ativo: true,
-            data_cadastro: moment.utc().format('YYYY-MM-DD HH:mm:ss')
+            ativo: true
+        });
+    }
+
+    async saveUsuarioSemSenha(usuario) {
+        return await Usuario.create({
+            nome: usuario.nome,
+            email: usuario.email,
+            codigo_acesso: usuario.codigoAcesso,
+            ativo: true
         });
     }
 }

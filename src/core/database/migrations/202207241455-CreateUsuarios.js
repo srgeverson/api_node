@@ -3,13 +3,11 @@ module.exports = {
     return queryInterface.createTable('usuarios', {
       id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         primaryKey: true,
         autoIncrement: true,
       },
       nome: {
         type: Sequelize.STRING(80),
-        allowNull: true
       },
       email: {
         type: Sequelize.STRING(255),
@@ -18,7 +16,6 @@ module.exports = {
       },
       senha: {
         type: Sequelize.STRING(255),
-        allowNull: false
       },
       ativo: {
         type: Sequelize.BOOLEAN,
@@ -27,17 +24,13 @@ module.exports = {
       },
       codigo_acesso: {
         type: Sequelize.STRING(10),
-        allowNull: true
       },
       data_cadastro: {
-        type: 'TIMESTAMP',
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        allowNull: true
+        type: "TIMESTAMP",
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
       },
       data_ultimo_acesso: {
-        type: 'TIMESTAMP',
-        defaultValue: null,
-        allowNull: true
+        type: "TIMESTAMP"
       },
     })
   },

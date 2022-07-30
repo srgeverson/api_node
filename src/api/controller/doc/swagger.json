@@ -30,10 +30,10 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "Lista de permissões.",
             "schema": {
               "$ref": "#/definitions/Permissoes"
-            }
+            },
+            "description": "Lista de permissões."
           },
           "401": {
             "schema": {
@@ -65,10 +65,10 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "Lista de usuários.",
             "schema": {
               "$ref": "#/definitions/Usuarios"
-            }
+            },
+            "description": "Lista de usuários."
           },
           "401": {
             "schema": {
@@ -89,7 +89,9 @@
             "description": "Erro interno."
           }
         }
-      },
+      }
+    },
+    "/v1/usuarios/com-senha": {
       "post": {
         "tags": [
           "Usuários"
@@ -106,9 +108,6 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          },
           "201": {
             "schema": {
               "$ref": "#/definitions/Usuario"
@@ -132,6 +131,148 @@
               "$ref": "#/definitions/Error409"
             },
             "description": "Duplicidade de dados."
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/Error500"
+            },
+            "description": "Erro interno."
+          }
+        }
+      }
+    },
+    "/v1/usuarios/sem-senha": {
+      "post": {
+        "tags": [
+          "Usuários"
+        ],
+        "description": "Cadastrar um usuário com senha.",
+        "parameters": [
+          {
+            "name": "UsuarioSemSenha",
+            "in": "body",
+            "description": "Cadastrar usuário sem senha.",
+            "schema": {
+              "$ref": "#/definitions/UsuarioSemSenha"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Informativo"
+            },
+            "description": "Usuário cadastrado."
+          },
+          "401": {
+            "schema": {
+              "$ref": "#/definitions/Error401"
+            },
+            "description": "Não autorizado."
+          },
+          "403": {
+            "schema": {
+              "$ref": "#/definitions/Error403"
+            },
+            "description": "Sem premissão."
+          },
+          "409": {
+            "schema": {
+              "$ref": "#/definitions/Error409"
+            },
+            "description": "Duplicidade de dados."
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/Error500"
+            },
+            "description": "Erro interno."
+          }
+        }
+      }
+    },
+    "/v1/usuarios/{id}": {
+      "get": {
+        "tags": [
+          "Usuários"
+        ],
+        "description": "Consulta usuário por id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id do usuário."
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Usuario"
+            },
+            "description": "Usuário consultado."
+          },
+          "401": {
+            "schema": {
+              "$ref": "#/definitions/Error401"
+            },
+            "description": "Não autorizado."
+          },
+          "403": {
+            "schema": {
+              "$ref": "#/definitions/Error403"
+            },
+            "description": "Sem premissão."
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/Error500"
+            },
+            "description": "Erro interno."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Usuários"
+        ],
+        "description": "Altera usuário por id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id do usuário."
+          },
+          {
+            "name": "UsuarioComSenha",
+            "in": "body",
+            "description": "Cadastrar usuário com senha.",
+            "schema": {
+              "$ref": "#/definitions/UsuarioComSenha"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Usuario"
+            },
+            "description": "Usuário alterado."
+          },
+          "401": {
+            "schema": {
+              "$ref": "#/definitions/Error401"
+            },
+            "description": "Não autorizado."
+          },
+          "403": {
+            "schema": {
+              "$ref": "#/definitions/Error403"
+            },
+            "description": "Sem premissão."
           },
           "500": {
             "schema": {
@@ -179,6 +320,10 @@
           },
           "nome": {
             "type": "string",
+            "example": "meu  nome/apelido"
+          },
+          "email": {
+            "type": "string",
             "example": "login@email.com"
           },
           "ativo": {
@@ -193,11 +338,88 @@
       "properties": {
         "nome": {
           "type": "string",
+          "example": "meu  nome/apelido"
+        },
+        "email": {
+          "type": "string",
           "example": "login@email.com"
         },
         "senha": {
           "type": "string",
           "example": "123456"
+        }
+      }
+    },
+    "UsuarioSemSenha": {
+      "type": "object",
+      "properties": {
+        "nome": {
+          "type": "string",
+          "example": "meu  nome/apelido"
+        },
+        "email": {
+          "type": "string",
+          "example": "login@email.com"
+        }
+      }
+    },
+    "Usuario": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "example": 1
+        },
+        "nome": {
+          "type": "string",
+          "example": "meu  nome/apelido"
+        },
+        "email": {
+          "type": "string",
+          "example": "login@email.com"
+        },
+        "ativo": {
+          "type": "boolean",
+          "example": true
+        }
+      }
+    },
+    "AlterarUsuario": {
+      "type": "object",
+      "properties": {
+        "nome": {
+          "type": "string",
+          "example": "meu  nome/apelido"
+        },
+        "email": {
+          "type": "string",
+          "example": "login@email.com"
+        }
+      }
+    },
+    "AlterarSenha": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "login@email.com"
+        },
+        "senhaAntiga": {
+          "type": "string",
+          "example": "123456"
+        },
+        "senhaNova": {
+          "type": "string",
+          "example": "654321"
+        }
+      }
+    },
+    "Informativo": {
+      "type": "object",
+      "properties": {
+        "mensagem": {
+          "type": "string",
+          "example": "Informação da operação."
         }
       }
     },

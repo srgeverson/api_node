@@ -23,14 +23,6 @@ class Log extends Model {
 
         return this;
     }
-
-    // static associate(models) {
-    //     this.belongsToMany(models.Usuario, {
-    //         through: 'usuarios_permissoes',
-    //         foreignKey: 'LogId',
-    //         as: 'usuarios'
-    //     });
-    // }
 }
 
 export default Log

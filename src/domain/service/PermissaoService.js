@@ -12,8 +12,6 @@ class PermissaoService {
         return await this.permissaoRepository
             .findAll()
             .then(async permissoes => {
-                if (!permissoes)
-                    return { message: 'Não há permissão cadastrada.' }
                 return permissoes;
             })
             .catch(() => {

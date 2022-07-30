@@ -9,13 +9,36 @@ class ErrorHandler extends Error {
 
 const handleError = (error, response) => {
 
-    const { statusCode, message } = error
+    const { statusCode, message } = error;
+
+    let tryMessage = 'undefined';
+
+    switch (statusCode) {
+        case '400':
+            tryMessage = 'Atênção';
+            break;
+        case '401':
+            tryMessage = 'Atênção';
+            break;
+        case '403':
+            tryMessage = 'Atênção';
+            break;
+        case '404':
+            tryMessage = 'Atênção';
+            break;
+        case '409':
+            tryMessage = 'Erro';
+            break;
+        default:
+            tryMessage = 'Erro';
+            break;
+    }
 
     response.status(statusCode).json({
-        status: 'error',
+        status: tryMessage,
         statusCode,
         message
-    })
+    });
 }
 
 module.exports = {

@@ -7,12 +7,10 @@ class PermissaoController {
     async todasPermissoes(request, response) {
         const permissaoService = new PermissaoService();
         const permissoes = await permissaoService.buscarTodas();
-        if (permissoes)
-            return response.json(permissoes);
+        if (permissoes.statusCode)
+            return response.status(permissoes.statusCode).json(permissoes);
         else
-            return response
-                .json(new ErrorHandler(StatusCode.ClientErrorNotFound, 'Não há permissões cadastradas.'))
-                .status(StatusCode.ClientErrorNotFound);
+            return response.status(StatusCode.SuccessOK).json(permissoes);
     }
 }
 

@@ -30,6 +30,10 @@ const docs = {
             nome: 'login@email.com',
             ativo: true
         }],
+        UsuarioComSenha: {
+            nome: 'login@email.com',
+            senha: '123456',
+        },
         Error400: {
             status: 'informativo',
             statusCode: 400,

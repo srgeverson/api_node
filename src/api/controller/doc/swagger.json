@@ -89,6 +89,57 @@
             "description": "Erro interno."
           }
         }
+      },
+      "post": {
+        "tags": [
+          "Usuários"
+        ],
+        "description": "Cadastrar um usuário com senha.",
+        "parameters": [
+          {
+            "name": "UsuarioComSenha",
+            "in": "body",
+            "description": "Cadastrar usuário com senha.",
+            "schema": {
+              "$ref": "#/definitions/UsuarioComSenha"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/Usuario"
+            },
+            "description": "Usuário cadastrado."
+          },
+          "401": {
+            "schema": {
+              "$ref": "#/definitions/Error401"
+            },
+            "description": "Não autorizado."
+          },
+          "403": {
+            "schema": {
+              "$ref": "#/definitions/Error403"
+            },
+            "description": "Sem premissão."
+          },
+          "409": {
+            "schema": {
+              "$ref": "#/definitions/Error409"
+            },
+            "description": "Duplicidade de dados."
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/Error500"
+            },
+            "description": "Erro interno."
+          }
+        }
       }
     }
   },
@@ -134,6 +185,19 @@
             "type": "boolean",
             "example": true
           }
+        }
+      }
+    },
+    "UsuarioComSenha": {
+      "type": "object",
+      "properties": {
+        "nome": {
+          "type": "string",
+          "example": "login@email.com"
+        },
+        "senha": {
+          "type": "string",
+          "example": "123456"
         }
       }
     },

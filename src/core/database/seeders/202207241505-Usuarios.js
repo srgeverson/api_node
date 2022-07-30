@@ -8,7 +8,7 @@ module.exports = {
         id: 1,
         nome: 'Admin',
         email: 'geversonjosedesouza@gmail.com',
-        senha: '123456',
+        senha: '$2a$12$quPz3Wq3lHyY/0gJeCAgceNEb42fUjiuNqyWoKFNci/Cr7PGvk.yO',
         ativo: true,
         codigo_acesso: null,
         data_ultimo_acesso: null
@@ -17,7 +17,7 @@ module.exports = {
         id: 2,
         nome: 'Geverson',
         email: 'geversonjosedesouza@hotmail.com',
-        senha: '123456',
+        senha: '$2a$12$quPz3Wq3lHyY/0gJeCAgceNEb42fUjiuNqyWoKFNci/Cr7PGvk.yO',
         ativo: true,
         codigo_acesso: null,
         data_ultimo_acesso: null,

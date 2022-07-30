@@ -1,4 +1,5 @@
 import Usuario from '../model/Usuario';
+import Permissao from '../model/Permissao';
 
 const moment = require('moment-timezone');
 
@@ -71,6 +72,23 @@ class UsuarioRepository {
                 }
             }
         );
+    }
+
+    async findPermissoesByUsuario(usuario) {
+        return await Usuario.findAll({
+            attributes: ['id', 'nome', 'email'],
+            include: [{
+                model: Permissao,
+                as: 'permissoes',
+                attributes: ['id', 'nome', 'descricao'],
+                through: {
+                    attributes: []
+                }
+            }],
+            where: {
+                id: usuario.id
+            },
+        });
     }
 }
 

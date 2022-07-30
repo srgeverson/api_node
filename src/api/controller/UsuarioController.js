@@ -78,6 +78,15 @@ class UsuarioController {
         else
             return response.status(StatusCode.SuccessNoContent).json(usuarioAtivado);
     }
+
+    async todasPermissoesDoUsuario(request, response) {
+        const { id } = request.params;
+        const permissoesDoUsuario = await this.usuarioService.todasPermissoesDoUsuario({id});
+        if (permissoesDoUsuario.statusCode)
+            return response.status(permissoesDoUsuario.statusCode).json(permissoesDoUsuario);
+        else
+            return response.status(StatusCode.SuccessOK).json(permissoesDoUsuario);
+    }
 }
 
 export default UsuarioController;

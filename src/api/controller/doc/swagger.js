@@ -21,8 +21,8 @@ const docs = {
     definitions: {
         Permissoes: [{
             id: 1,
-            nome: 'funcionario',
-            descricao: "Permissão de funcionário.",
+            nome: 'alterar_usuario',
+            descricao: "Permite alterar o usuário.",
             ativo: true
         }],
         Usuarios: [{
@@ -55,6 +55,20 @@ const docs = {
             email: 'login@email.com',
             senhaAntiga: '123456',
             senhaNova: '654321',
+        },
+        PermissoesUsuario: {
+            Usuario: {
+                id: 1,
+                nome: 'meu  nome/apelido',
+                email: 'login@email.com',
+                ativo: true,
+                Permissoes: [{
+                    id: 1,
+                    nome: 'alterar_usuario',
+                    descricao: "Permite alterar o usuário.",
+                    ativo: true
+                }]
+            },
         },
         Informativo: { mensagem: 'Informação da operação.' },
         Error400: {

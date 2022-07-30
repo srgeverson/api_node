@@ -265,7 +265,7 @@ routes.put(`/v1/usuarios/ativa/:id`, asyncHandler(async (request, response) => {
     // #swagger.tags = ['Usuários']
     // #swagger.description = 'Ativa usuário por id.'
 
-    // #swagger.parameters['id'] = { description: 'Id do usuário.' },
+    // #swagger.parameters['id'] = { description: 'Id do usuário.' }
 
     // #swagger.responses[204] = { description: 'Usuário ativado.' } 
 
@@ -287,6 +287,40 @@ routes.put(`/v1/usuarios/ativa/:id`, asyncHandler(async (request, response) => {
      }
      */
     return await usuarioController.ativarUsuario(request, response);
+}));
+
+
+routes.get(`/v1/usuarios/:id/permissoes`, asyncHandler(async (request, response) => {
+    // #swagger.tags = ['Usuários']
+    // #swagger.description = 'Lista de todas permissões do usuário.'
+    
+    // #swagger.parameters['id'] = { description: 'Id do usuário.' }
+
+    /** #swagger.responses[200] = {
+        schema: { $ref: "#/definitions/PermissoesUsuario" },
+        description: 'Lista as permissões do usuário.' 
+     } 
+    */
+
+    /** #swagger.responses[401] = {
+        schema: { $ref: "#/definitions/Error401" },
+        description: 'Não autorizado.' 
+     } 
+    */
+
+    /** #swagger.responses[403] = {
+        schema: { $ref: "#/definitions/Error403" },
+        description: 'Sem premissão.' 
+     } 
+    */
+
+    /** #swagger.responses[500] = {
+        schema: { $ref: "#/definitions/Error500" },
+        description: 'Erro interno.' 
+     }
+     */
+   
+    return await usuarioController.todasPermissoesDoUsuario(request, response);
 }));
 
 //#endregion

@@ -101,6 +101,11 @@ const docs = {
             statusCode: 404,
             message: 'Dados não encontrados.'
         },
+        Error409: {
+            status: 'atênção',
+            statusCode: 409,
+            message: 'Violação da integridade de dados.'
+        },
         Error500: {
             status: 'erro',
             statusCode: 500,

@@ -158,16 +158,12 @@ class UsuarioService {
         if (usuarioEncontrado.statusCode)
             return usuarioEncontrado;
 
-        // if (usuario.ativo === usuarioEncontrado.ativo)
-        //     return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Usuário já encontrase ativado/desativado.');
-
         return await this.usuarioRepository
             .findPermissoesByUsuario(usuario)
             .then(async permissoesDoUsuario => {
                 return permissoesDoUsuario;
             })
             .catch((err) => {
-                console.log(err);
                 return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao pesquisar as permissões do usuário.');
             });
     }

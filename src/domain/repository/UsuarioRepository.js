@@ -50,8 +50,7 @@ class UsuarioRepository {
             {
                 nome: usuario.nome,
                 email: usuario.email,
-                data_ultimo_acesso: moment.utc().format('YYYY-MM-DD HH:mm:ss'),
-                ativo: true
+                ativo: usuario.ativo
             },
             {
                 where: {

@@ -97,6 +97,11 @@ routes.get(`/v1/usuarios`, auth, asyncHandler(async (request, response) => {
     // #swagger.tags = ['Usuários']
     // #swagger.description = 'Lista de todos usuários cadastrados.'
 
+    /* #swagger.security = [{
+            "oAuthSample": []
+        }] 
+    */
+
     /** #swagger.responses[200] = {
         schema: { $ref: "#/definitions/Usuarios" },
         description: 'Lista de usuários.' 

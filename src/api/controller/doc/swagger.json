@@ -20,6 +20,14 @@
   "schemes": [
     "http"
   ],
+  "securityDefinitions": {
+    "oAuthSample": {
+      "type": "oauth2",
+      "tokenUrl": "http://localhost:8080/v1/usuarios/token",
+      "flow": "password",
+      "scopes": {}
+    }
+  },
   "paths": {
     "/v1/permissoes": {
       "get": {
@@ -112,7 +120,13 @@
           "Usuários"
         ],
         "description": "Lista de todos usuários cadastrados.",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "schema": {
@@ -138,7 +152,12 @@
             },
             "description": "Erro interno."
           }
-        }
+        },
+        "security": [
+          {
+            "oAuthSample": []
+          }
+        ]
       }
     },
     "/v1/usuarios/com-senha": {

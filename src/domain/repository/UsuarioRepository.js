@@ -119,6 +119,10 @@ class UsuarioRepository {
             }
         );
     }
+
+    async deleteByEmail(usuario) {
+        return await Usuario.destroy({ where: { email: usuario.email } });
+    }
 }
 
 export default UsuarioRepository;

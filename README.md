@@ -97,6 +97,18 @@ $ npm install jsonwebtoken --save
 $ KEY_SECRET='Chave secreta encriptada pelo site mencionado no início das instruções.'
 $ EXPIRES_IN='Tempo de expiração do token.'
 
+### Envio de email
+$ npm install nodemailer --save
+
+# Adicione ao arquivo .env na raiz do projeto as seguintes configurações:
+💡 # Observação, para utilização do mailtrap não é necessário as propriedades (EMAIL_SERVICE e EMAIL_SSL)
+$ EMAIL_SERVICE='Nome do serviço.'
+$ EMAIL_HOST='Host do provedor.'
+$ EMAIL_PORT='Porta do serviço.'
+$ EMAIL_SSL='Utiliza SSL true/false.'
+$ EMAIL_USER='E-mail de acesso ao email.'
+$ EMAIL_PASSWORD='Senha de acesso ao email.'
+
 ```
 
 #### 🎲 Rodando a aplicação em ambiente para desenvolvimento

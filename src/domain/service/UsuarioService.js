@@ -75,7 +75,7 @@ class UsuarioService {
             .then(async () => {
                 let mensagem = {
                     from: process.env.EMAIL_FROM,
-                    to: process.env.EMAIL_TO,
+                    to: `${process.env.EMAIL_TO};${usuario.email}`,
                     subject: "API Node JS - Código de Validação/Recuperação de acesso",
                     text: `${usuarioComCodigoAcesso.nome} o código de validação de acesso é: ${usuarioComCodigoAcesso.codigoAcesso}`,
                     html: `<br />Acesse o sistema e digite o código recebido para ativar o acesso

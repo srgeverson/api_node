@@ -22,7 +22,7 @@ export const enviarEmail = (mensagem, servico = null || '') => {
         case 'gmail':
             return enviandoEmail(mensagem, { ...transport, service: servico });
         default:
-            return enviarPorMailtrap(mensagem);
+            return enviandoEmail(mensagem, transport);
     }
 }
 

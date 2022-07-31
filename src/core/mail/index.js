@@ -1,15 +1,13 @@
 import nodemailer from 'nodemailer';
-import { StatusCode } from 'status-code-enum';
-import { ErrorHandler } from '../helpers/error';
 
-const enviandoEmail = async (message, transport) => {
-    await nodemailer.createTransport(transport).sendMail(message, (retornoDoEnvio) => {
-        if (retornoDoEnvio)
-            return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro durante o envio do email.');
-    });
+const enviandoEmail = (message, transport) => {
+    //Permite o envio de email com o TLS "Desabilitado"
+    process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = process.env.NODE_TLS_REJECT_UNAUTHORIZED == 'false' ? 0 : 1;    
+
+    return nodemailer.createTransport(transport).sendMail(message, (retornoDoEnvioErro) => retornoDoEnvioErro);
 }
 
-export const enviarEmail = (mensagem, servico = null || '') => {
+export const enviarEmail = async (mensagem, servico) => {
     let transport = {
         host: process.env.EMAIL_HOST,
         port: parseInt(process.env.EMAIL_PORT),
@@ -19,10 +17,23 @@ export const enviarEmail = (mensagem, servico = null || '') => {
         }
     }
     switch (servico) {
-        case 'gmail':
-            return enviandoEmail(mensagem, { ...transport, service: servico });
+        case 'Gmail':
+            return await enviandoEmail(mensagem, { ...transport, secure: process.env.EMAIL_SSL });
+        case 'Hotmail':
+            return await enviandoEmail(mensagem, {
+                ...transport,
+                secure: process.env.EMAIL_SSL,
+                secureConnection: false,
+                tls: {
+                    ciphers: 'SSLv3'
+                }
+            });
+        case 'Zoho':
+            const teste =await enviandoEmail(mensagem, { ...transport, secure: process.env.EMAIL_SSL });
+            console.log('teste='+JSON.stringify(teste));
+            return teste;
         default:
-            return enviandoEmail(mensagem, transport);
+            return await enviandoEmail(mensagem, transport);
     }
 }
 

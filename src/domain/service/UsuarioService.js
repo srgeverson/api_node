@@ -68,27 +68,23 @@ class UsuarioService {
         if (usuarioExistente)
             return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Já existe um usuário cadastrado com esse email.');
 
-        let usuarioComCodigoAcesso = { ...usuario, ...{codigoAcesso: Math.random().toString(36).substr(3, 10) } };
+        let usuarioComCodigoAcesso = { ...usuario, ...{ codigoAcesso: Math.random().toString(36).substr(3, 10) } };
 
         return await this.usuarioRepository
             .saveUsuarioSemSenha(usuarioComCodigoAcesso)
             .then(async () => {
-                let mensagem = {
+                await enviarEmail({
                     from: process.env.EMAIL_FROM,
-                    to: `${process.env.EMAIL_TO};${usuario.email}`,
+                    to: [process.env.EMAIL_TO, usuario.email].join(';'),
                     subject: "API Node JS - Código de Validação/Recuperação de acesso",
                     text: `${usuarioComCodigoAcesso.nome} o código de validação de acesso é: ${usuarioComCodigoAcesso.codigoAcesso}`,
                     html: `<br />Acesse o sistema e digite o código recebido para ativar o acesso
                             <br />${usuarioComCodigoAcesso.nome} o código de validação de acesso é: ${usuarioComCodigoAcesso.codigoAcesso}`
-                };
-                const envioEmail = await enviarEmail(mensagem, process.env.EMAIL_FROM);
-                if (envioEmail)
-                    return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Falha ao enviar a senha de recuperação da conta!');
-                else
-                    return { mensagem: "Senha enviada por email, confira e siga as intruções." }
+                },
+                    process.env.EMAIL_SERVICE);
+                return { mensagem: "Senha enviada por email, confira e siga as intruções." }
             })
-            .catch((err) => {
-                console.log(err);
+            .catch(() => {
                 return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao cadastrar usuario com senha.');
             });
     }

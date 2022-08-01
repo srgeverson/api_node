@@ -10,7 +10,13 @@ function isUUIDv4(uuid) {
     return uuidv4Pattern.test(uuid)
 }
 
+const validateEmail = (value) => {
+    let patternEmailExpectd = /\S+@\S+\.\S+/;//texto@texto.com
+    return patternEmailExpectd.test(value);
+}
+
 module.exports = {
     capitalized,
-    isUUIDv4
+    isUUIDv4,
+    validateEmail
 }

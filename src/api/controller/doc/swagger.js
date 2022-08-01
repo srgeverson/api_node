@@ -10,13 +10,21 @@ const docs = {
     schemes: ['http'],
     tags: [
         {
+            name: 'Autorização',
+            description: 'Gerencia o fluxo de autorização de acesso.'
+        },
+        {
             name: 'Permissões',
             description: 'Gerencia o cadastro de permissões.'
         },
         {
             name: 'Usuários',
             description: 'Gerencia o cadastro de usuários.'
-        }
+        },
+        {
+            name: 'UsuáriosPermissões',
+            description: 'Gerencia o cadastro de permissões do usuário.'
+        },
     ],
     definitions: {
         Permissoes: [{

@@ -88,14 +88,19 @@ const docs = {
             expiresIn: 21000,
             access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
         },
-        ValidarUsuario:{
+        ValidarUsuario: {
             nome: 'meu  nome/apelido',
             email: 'login@email.com',
             codigoAcesso: 'w37f3ggrcs'
         },
-        EmailUsuario:{
+        EmailUsuario: {
             email: 'login@email.com'
         },
+        CadastrarPermissoes: [1, 2, 3],
+        PermissoesCadastradas: [
+            { id: 1, mensagem: 'Permissão cadastrada.' },
+            { id: 2, mensagem: 'Permissão já existe.' }
+        ],
         Informativo: { mensagem: 'Informação da operação.' },
         Error400: {
             status: 'informativo',
@@ -141,7 +146,7 @@ const docs = {
         //     name: 'X-API-KEY', // name of the header, query parameter or cookie
         //     description: 'Some description...'
         //   }
-      }
+    }
 }
 
 const outputFile = './src/api/controller/doc/swagger.json';

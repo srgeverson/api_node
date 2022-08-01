@@ -577,6 +577,54 @@
             "description": "Erro interno."
           }
         }
+      },
+      "post": {
+        "tags": [
+          "UsuáriosPermissões"
+        ],
+        "description": "Cadastar várias permissões ao usuário.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "CadastrarPermissoes",
+            "in": "body",
+            "description": "Lista de permissões a ser cadastrada para o usuário.",
+            "schema": {
+              "$ref": "#/definitions/CadastrarPermissoes"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/PermissoesCadastradas"
+            },
+            "description": "Lista de permissões cadastrada para o usuário."
+          },
+          "401": {
+            "schema": {
+              "$ref": "#/definitions/Error401"
+            },
+            "description": "Não autorizado."
+          },
+          "403": {
+            "schema": {
+              "$ref": "#/definitions/Error403"
+            },
+            "description": "Sem premissão."
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/Error500"
+            },
+            "description": "Erro interno."
+          }
+        }
       }
     }
   },
@@ -821,6 +869,33 @@
         "email": {
           "type": "string",
           "example": "login@email.com"
+        }
+      }
+    },
+    "CadastrarPermissoes": {
+      "type": "array",
+      "example": [
+        1,
+        2,
+        3
+      ],
+      "items": {
+        "type": "number"
+      }
+    },
+    "PermissoesCadastradas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 2
+          },
+          "mensagem": {
+            "type": "string",
+            "example": "Permissão já existe."
+          }
         }
       }
     },

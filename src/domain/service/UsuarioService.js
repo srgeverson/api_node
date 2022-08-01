@@ -296,6 +296,73 @@ class UsuarioService {
                 return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao recuperar a senha.');
             });
     }
+
+    async incluirPermissoesAoUsuario(usuario) {
+
+        const usuarioEncontrado = await this.buscarPorId(usuario.id);
+
+        if (!usuarioEncontrado.ativo)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Usuário informado não está ativo.');
+
+        if (usuarioEncontrado.statusCode)
+            return usuarioEncontrado;
+
+        let permissoesOk = [];
+        let permissoesNaoOk = [];
+         
+        await usuario.permissoes.forEach(async permissao => {
+            const permissaoEncontrada = await this.usuarioRepository
+                .findPermissaoByUsuario({ id: usuario.id, permissaoId: permissao })
+                .then(async permissoesDoUsuario => permissoesDoUsuario)
+                .catch((err) => {
+                    console.log(err);
+                });
+                if(permissaoEncontrada=== undefined){
+                    console.log(`..................${JSON.stringify(permissaoEncontrada)}`);
+
+                    permissoesOk.push({ id: permissao, mensagem: 'Erro ao verificar permissão.' });
+                }
+            else if (!permissaoEncontrada.ativo)
+                permissoesNaoOk.push({ id: permissao, mensagem: 'Permissão não está ativa.' });
+            else if (!permissaoEncontrada)
+                permissoesNaoOk.push({ id: permissao, mensagem: 'Permissão não existe.' });
+            else
+                permissoesOk.push({ id: permissao, mensagem: 'Permissão adicionada com sucesso.' });
+        });
+        return { id: usuario.id, permissoesOk, permissoesNaoOk };
+        return { id: usuario.id, permissoes: permissoesOk.concat(permissoesNaoOk) };
+        return  await this.usuarioRepository
+        .findPermissaoByUsuario({ id: 1, permissaoId: 7 })
+        .then(async permissoesDoUsuario => permissoesDoUsuario)
+        .catch((err) => {
+        console.log(err);
+            return 'Erro ao pesquisar as permisses do usuário.'+JSON.stringify()
+        }
+        ); 
+        const permissaoEncontrada = await this.usuarioRepository
+            .findPermissaoByUsuario(usuario)
+            .then(async permissoesDoUsuario => permissoesDoUsuario)
+            .catch(() => 'Erro ao pesquisar as permisses do usuário.');            
+        //const codigoAcesso = Math.random().toString(36).substr(3, 10);
+
+        // return await this.usuarioRepository
+        //     .updateCodigoAcessoByEmail({ email: usuario.email, codigoAcesso })
+        //     .then(async () => {
+        //         await enviarEmail({
+        //             from: process.env.EMAIL_FROM,
+        //             to: [process.env.EMAIL_TO, usuarioExistente.email].join(';'),
+        //             subject: "API Node JS - Código de Validação/Recuperação de acesso",
+        //             text: `${usuarioExistente.nome} o código de validação de acesso é: ${codigoAcesso}`,
+        //             html: `<br />Acesse o sistema e digite o código recebido para ativar o acesso
+        //                     <br />${usuarioExistente.nome} o código de validação de acesso é: ${codigoAcesso}`
+        //         },
+        //             process.env.EMAIL_SERVICE);
+        //         return { mensagem: "Senha enviada por email, confira e siga as intruções." }
+        //     })
+        //     .catch(() => {
+        //         return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao recuperar a senha.');
+        //     });
+    }
 }
 
 export default UsuarioService;

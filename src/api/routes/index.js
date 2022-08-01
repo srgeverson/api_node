@@ -453,6 +453,44 @@ routes.get(`/v1/usuarios/:id/permissoes`, asyncHandler(async (request, response)
     return await usuarioController.todasPermissoesDoUsuario(request, response);
 }));
 
+routes.post(`/v1/usuarios/:id/permissoes`, asyncHandler(async (request, response) => {
+    // #swagger.tags = ['UsuáriosPermissões']
+    // #swagger.description = 'Cadastar várias permissões ao usuário.'
+
+    /*  #swagger.parameters['CadastrarPermissoes'] = {
+        in: 'body',
+        description: 'Lista de permissões a ser cadastrada para o usuário.',
+        schema: { $ref: '#/definitions/CadastrarPermissoes' }
+    } */
+
+    /** #swagger.responses[200] = {
+        schema: { $ref: "#/definitions/PermissoesCadastradas" },
+        description: 'Lista de permissões cadastrada para o usuário.' 
+     } 
+    */
+
+    /** #swagger.responses[401] = {
+        schema: { $ref: "#/definitions/Error401" },
+        description: 'Não autorizado.' 
+     } 
+    */
+
+    /** #swagger.responses[403] = {
+        schema: { $ref: "#/definitions/Error403" },
+        description: 'Sem premissão.' 
+     } 
+    */
+
+    /** #swagger.responses[500] = {
+        schema: { $ref: "#/definitions/Error500" },
+        description: 'Erro interno.' 
+     }
+     */
+   
+    return await usuarioController.incluirPermissoesAoUsuario(request, response);
+}));
+
+
 //#endregion Controla as permissões do usuário
 
 export { routes }

@@ -89,6 +89,26 @@ class UsuarioRepository {
             },
         });
     }
+
+    async findPermissaoByUsuario(usuario) {
+        return await Usuario.findAll({
+            attributes: ['id', 'nome', 'email'],
+            include: [{
+                model: Permissao,
+                as: 'permissoes',
+                attributes: ['id', 'nome', 'descricao', 'ativo'],
+                through: {
+                    attributes: []
+                },
+                where: {
+                    permissaoId: usuario.permissaoId
+                }
+            }],
+            where: {
+                id: usuario.id
+            },
+        });
+    }
     
     async findPermissoesByEmail(usuario) {
         return await Usuario.findOne({

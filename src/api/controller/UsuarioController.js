@@ -81,7 +81,7 @@ class UsuarioController {
 
     async todasPermissoesDoUsuario(request, response) {
         const { id } = request.params;
-        const permissoesDoUsuario = await this.usuarioService.todasPermissoesDoUsuario({id});
+        const permissoesDoUsuario = await this.usuarioService.todasPermissoesDoUsuario({ id });
         if (permissoesDoUsuario.statusCode)
             return response.status(permissoesDoUsuario.statusCode).json(permissoesDoUsuario);
         else
@@ -109,6 +109,18 @@ class UsuarioController {
     async enviarCodigoAcessoParaEmail(request, response) {
         const { email } = request.body;
         const usuarioAutorizado = await this.usuarioService.enviarCodigoAcessoParaEmail({ email });
+        if (usuarioAutorizado.statusCode)
+            return response.status(usuarioAutorizado.statusCode).json(usuarioAutorizado);
+        else
+            return response.status(StatusCode.SuccessOK).json(usuarioAutorizado);
+    }
+
+    async incluirPermissoesAoUsuario(request, response) {
+        const { id } = request.params;
+        const permissoes = request.body;
+        console.log(permissoes);
+        //return response.status(StatusCode.SuccessOK).json({ id, permissoes });
+        const usuarioAutorizado = await this.usuarioService.incluirPermissoesAoUsuario({ id, permissoes });
         if (usuarioAutorizado.statusCode)
             return response.status(usuarioAutorizado.statusCode).json(usuarioAutorizado);
         else

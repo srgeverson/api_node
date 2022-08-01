@@ -29,9 +29,7 @@ export const enviarEmail = async (mensagem, servico) => {
                 }
             });
         case 'Zoho':
-            const teste =await enviandoEmail(mensagem, { ...transport, secure: process.env.EMAIL_SSL });
-            console.log('teste='+JSON.stringify(teste));
-            return teste;
+            return await enviandoEmail(mensagem, { ...transport, secure: process.env.EMAIL_SSL });
         default:
             return await enviandoEmail(mensagem, transport);
     }

@@ -1,15 +1,12 @@
 import { Router } from 'express';
 import asyncHandler from 'express-async-handler';
 import auth from '../../core/auth';
-
-const swaggerFile = require('../controller/doc/swagger.json');
-const swaggerUi = require('swagger-ui-express');
-
 import PermissaoController from '../controller/PermissaoController';
 import UsuarioController from '../controller/UsuarioController';
 
+const swaggerFile = require('../controller/doc/swagger.json');
+const swaggerUi = require('swagger-ui-express');
 const routes = Router();
-
 const permissaoController = new PermissaoController();
 const usuarioController = new UsuarioController();
 

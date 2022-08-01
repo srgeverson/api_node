@@ -301,7 +301,9 @@
             "description": "Erro interno."
           }
         }
-      },
+      }
+    },
+    "/v1/usuarios/id/{id}": {
       "put": {
         "tags": [
           "Usuários"
@@ -465,6 +467,100 @@
               "$ref": "#/definitions/Error403"
             },
             "description": "Sem premissão."
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/Error500"
+            },
+            "description": "Erro interno."
+          }
+        }
+      }
+    },
+    "/v1/usuarios/validar-acesso": {
+      "put": {
+        "tags": [
+          "Usuários"
+        ],
+        "description": "Valida o acesso do usuário a partir do código recebido por e-mail.",
+        "parameters": [
+          {
+            "name": "ValidarUsuario",
+            "in": "body",
+            "description": "Cadastrar usuário com senha.",
+            "schema": {
+              "$ref": "#/definitions/ValidarUsuario"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Usuario"
+            },
+            "description": "Usuário validado."
+          },
+          "401": {
+            "schema": {
+              "$ref": "#/definitions/Error401"
+            },
+            "description": "Não autorizado."
+          },
+          "403": {
+            "schema": {
+              "$ref": "#/definitions/Error403"
+            },
+            "description": "Sem premissão."
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/Error500"
+            },
+            "description": "Erro interno."
+          }
+        }
+      }
+    },
+    "/v1/usuarios/recuperar-acesso": {
+      "put": {
+        "tags": [
+          "Usuários"
+        ],
+        "description": "Recupear a senha rebendo um código de acesso por email.",
+        "parameters": [
+          {
+            "name": "EmailUsuario",
+            "in": "body",
+            "description": "Receber um códifo por e-mail para validar acesso.",
+            "schema": {
+              "$ref": "#/definitions/EmailUsuario"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Informativo"
+            },
+            "description": "Código de acesso enviado."
+          },
+          "401": {
+            "schema": {
+              "$ref": "#/definitions/Error401"
+            },
+            "description": "Não autorizado."
+          },
+          "403": {
+            "schema": {
+              "$ref": "#/definitions/Error403"
+            },
+            "description": "Sem premissão."
+          },
+          "409": {
+            "schema": {
+              "$ref": "#/definitions/Error409"
+            },
+            "description": "Duplicidade de dados."
           },
           "500": {
             "schema": {
@@ -691,6 +787,32 @@
         "access_token": {
           "type": "string",
           "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+        }
+      }
+    },
+    "ValidarUsuario": {
+      "type": "object",
+      "properties": {
+        "nome": {
+          "type": "string",
+          "example": "meu  nome/apelido"
+        },
+        "email": {
+          "type": "string",
+          "example": "login@email.com"
+        },
+        "codigoAcesso": {
+          "type": "string",
+          "example": "w37f3ggrcs"
+        }
+      }
+    },
+    "EmailUsuario": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "login@email.com"
         }
       }
     },

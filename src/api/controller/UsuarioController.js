@@ -96,6 +96,24 @@ class UsuarioController {
         else
             return response.status(StatusCode.SuccessOK).json(usuarioAutorizado);
     }
+
+    async cadastrarSenhaComCodigo(request, response) {
+        const { email, senha, codigoAcesso } = request.body;
+        const usuarioAutorizado = await this.usuarioService.cadastrarSenhaComCodigo({ email, senha, codigoAcesso });
+        if (usuarioAutorizado.statusCode)
+            return response.status(usuarioAutorizado.statusCode).json(usuarioAutorizado);
+        else
+            return response.status(StatusCode.SuccessOK).json(usuarioAutorizado);
+    }
+
+    async enviarCodigoAcessoParaEmail(request, response) {
+        const { email } = request.body;
+        const usuarioAutorizado = await this.usuarioService.enviarCodigoAcessoParaEmail({ email });
+        if (usuarioAutorizado.statusCode)
+            return response.status(usuarioAutorizado.statusCode).json(usuarioAutorizado);
+        else
+            return response.status(StatusCode.SuccessOK).json(usuarioAutorizado);
+    }
 }
 
 export default UsuarioController;

@@ -4,6 +4,7 @@ import UsuarioRepository from '../repository/UsuarioRepository';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { enviarEmail } from '../../core/mail';
+import { validateEmail } from '../../core/helpers/utils';
 
 class UsuarioService {
 
@@ -114,6 +115,12 @@ class UsuarioService {
     }
 
     async buscarPorEmail(email) {
+        if (!email)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'E-mail de usuário não informado.');
+
+        if (!validateEmail(email))
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'E-mail informado não é válido.');
+
         return await this.usuarioRepository
             .findByEmail(email)
             .then(async usuario => {
@@ -196,6 +203,9 @@ class UsuarioService {
         if (!usuarioExistente)
             return new ErrorHandler(StatusCode.ClientErrorUnauthorized, 'E-mail inválido ou usuário não existe.');
 
+        if (!usuarioExistente.senha)
+            return new ErrorHandler(StatusCode.ClientErrorUnauthorized, 'Usuário não possui senha cadastrada.');
+
         if (!await bcrypt.compare(usuario.senha, usuarioExistente.senha))
             return new ErrorHandler(StatusCode.ClientErrorUnauthorized, 'Senha inválida.');
 
@@ -204,22 +214,87 @@ class UsuarioService {
         const chave = process.env.KEY_SECRET;
         const permissoes = permissoesUsuario.permissoes.map(permissao => permissao.ativo && permissao.nome);
 
-        await this.usuarioRepository.updateDataDeAcesso(usuario);
-
-        return {
-            id: usuarioExistente.id,
-            nome: usuarioExistente.nome,
-            expiresIn,
-            access_token: jwt.sign(
-                {
+        return await this.usuarioRepository
+            .updateDataDeAcesso(usuario)
+            .then(async () => {
+                return {
                     id: usuarioExistente.id,
-                    name: usuarioExistente.nome,
-                    roles: permissoes
+                    nome: usuarioExistente.nome,
+                    expiresIn,
+                    access_token: jwt.sign(
+                        {
+                            id: usuarioExistente.id,
+                            name: usuarioExistente.nome,
+                            roles: permissoes
+                        },
+                        chave,
+                        { expiresIn }
+                    ),
+                }
+            })
+            .catch(() => {
+                return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao gerer o token de acesso.');
+            });
+    }
+
+    async cadastrarSenhaComCodigo(usuario) {
+
+        if (!usuario.senha)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Senha de usuário não informado.');
+
+        const usuarioExistente = await this.buscarPorEmail(usuario.email);
+        if (!usuarioExistente)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Não existe usuário cadastrado com e-mail informado.');
+
+        if (!usuarioExistente.codigo_acesso)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Usuário não possue código de acesso, reenvie seu cadastro ou solicite a recuperação de senha.');
+
+        if (usuario.codigoAcesso !== usuarioExistente.codigo_acesso)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Código de acesso não é valido ou está errado.');
+
+        if (usuario.senha.length < 6)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Senha tem que possuir pelo menos 6 caracteres.');
+
+        const senhaEncriptada = await bcrypt.hash(usuario.senha, 12);
+
+        return await this.usuarioRepository.updateSenhaByEmail({ email: usuario.email, senha: senhaEncriptada }).then(async () => {
+            return {
+                id: usuarioExistente.id,
+                nome: usuarioExistente.nome,
+                email: usuarioExistente.email,
+                ativo: usuarioExistente.ativo
+            }
+        })
+            .catch(() => {
+                return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao validar o acesso do usuário.');
+            });
+    }
+
+    async enviarCodigoAcessoParaEmail(usuario) {
+
+        const usuarioExistente = await this.buscarPorEmail(usuario.email);
+        if (!usuarioExistente)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Usuário não encontrado com o e-mail informado.');
+
+        const codigoAcesso = Math.random().toString(36).substr(3, 10);
+
+        return await this.usuarioRepository
+            .updateCodigoAcessoByEmail({ email: usuario.email, codigoAcesso })
+            .then(async () => {
+                await enviarEmail({
+                    from: process.env.EMAIL_FROM,
+                    to: [process.env.EMAIL_TO, usuarioExistente.email].join(';'),
+                    subject: "API Node JS - Código de Validação/Recuperação de acesso",
+                    text: `${usuarioExistente.nome} o código de validação de acesso é: ${codigoAcesso}`,
+                    html: `<br />Acesse o sistema e digite o código recebido para ativar o acesso
+                            <br />${usuarioExistente.nome} o código de validação de acesso é: ${codigoAcesso}`
                 },
-                chave,
-                { expiresIn }
-            ),
-        }
+                    process.env.EMAIL_SERVICE);
+                return { mensagem: "Senha enviada por email, confira e siga as intruções." }
+            })
+            .catch(() => {
+                return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao recuperar a senha.');
+            });
     }
 }
 

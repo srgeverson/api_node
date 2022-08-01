@@ -120,8 +120,40 @@ class UsuarioRepository {
         );
     }
 
+    async updateSenhaByEmail(usuario) {
+        return await Usuario.update(
+            {
+                senha: usuario.senha,
+                codigo_acesso: null
+            },
+            {
+                where: {
+                    email: usuario.email
+                }
+            }
+        );
+    }
+
+    async updateCodigoAcessoByEmail(usuario) {
+        return await Usuario.update(
+            {
+                senha: null,
+                codigo_acesso: usuario.codigoAcesso
+            },
+            {
+                where: {
+                    email: usuario.email
+                }
+            }
+        );
+    }
+
     async deleteByEmail(usuario) {
         return await Usuario.destroy({ where: { email: usuario.email } });
+    }
+    
+    async deleteById(usuario) {
+        return await Usuario.destroy({ where: { id: usuario.id } });
     }
 }
 

@@ -54,7 +54,7 @@ const docs = {
         AlterarSenha: {
             email: 'login@email.com',
             senhaAntiga: '123456',
-            senhaNova: '654321',
+            senhaNova: '654321'
         },
         PermissoesUsuario: {
             Usuario: {
@@ -68,17 +68,25 @@ const docs = {
                     descricao: "Permite alterar o usuário.",
                     ativo: true
                 }]
-            },
+            }
         },
         UsuarioLogin: {
             email: 'login@email.com',
-            senha: '654321',
+            senha: '654321'
         },
         UsuarioAutenticado: {
             id: 1,
             nome: 'nome/apelido',
             expiresIn: 21000,
             access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+        },
+        ValidarUsuario:{
+            nome: 'meu  nome/apelido',
+            email: 'login@email.com',
+            codigoAcesso: 'w37f3ggrcs'
+        },
+        EmailUsuario:{
+            email: 'login@email.com'
         },
         Informativo: { mensagem: 'Informação da operação.' },
         Error400: {

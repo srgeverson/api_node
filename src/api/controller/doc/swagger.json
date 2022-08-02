@@ -37,6 +37,86 @@
     }
   },
   "paths": {
+    "/v1/permissoes/ativa/{id}": {
+      "put": {
+        "tags": [
+          "Permissões"
+        ],
+        "description": "Ativa permissão por id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id do permissão."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Permissão ativada."
+          },
+          "401": {
+            "schema": {
+              "$ref": "#/definitions/Error401"
+            },
+            "description": "Não autorizado."
+          },
+          "403": {
+            "schema": {
+              "$ref": "#/definitions/Error403"
+            },
+            "description": "Sem premissão."
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/Error500"
+            },
+            "description": "Erro interno."
+          }
+        }
+      }
+    },
+    "/v1/permissoes/desativa/{id}": {
+      "put": {
+        "tags": [
+          "Permissões"
+        ],
+        "description": "Desativa permissão por id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id do permissão."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Permissão desativada."
+          },
+          "401": {
+            "schema": {
+              "$ref": "#/definitions/Error401"
+            },
+            "description": "Não autorizado."
+          },
+          "403": {
+            "schema": {
+              "$ref": "#/definitions/Error403"
+            },
+            "description": "Sem premissão."
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/Error500"
+            },
+            "description": "Erro interno."
+          }
+        }
+      }
+    },
     "/v1/permissoes": {
       "get": {
         "tags": [

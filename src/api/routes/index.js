@@ -14,6 +14,62 @@ routes.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 //#region CRUD Permissão
 
+routes.put(`/v1/permissoes/ativa/:id`, asyncHandler(async (request, response) => {
+    // #swagger.tags = ['Permissões']
+    // #swagger.description = 'Ativa permissão por id.'
+
+    // #swagger.parameters['id'] = { description: 'Id do permissão.' }
+
+    // #swagger.responses[204] = { description: 'Permissão ativada.' } 
+
+    /** #swagger.responses[401] = {
+        schema: { $ref: "#/definitions/Error401" },
+        description: 'Não autorizado.' 
+     } 
+    */
+
+    /** #swagger.responses[403] = {
+        schema: { $ref: "#/definitions/Error403" },
+        description: 'Sem premissão.' 
+     } 
+    */
+
+    /** #swagger.responses[500] = {
+        schema: { $ref: "#/definitions/Error500" },
+        description: 'Erro interno.' 
+     }
+     */
+    return await permissaoController.ativarPermissao(request, response);
+}));
+
+routes.put(`/v1/permissoes/desativa/:id`, asyncHandler(async (request, response) => {
+    // #swagger.tags = ['Permissões']
+    // #swagger.description = 'Desativa permissão por id.'
+
+    // #swagger.parameters['id'] = { description: 'Id do permissão.' }
+
+    // #swagger.responses[204] = { description: 'Permissão desativada.' } 
+
+    /** #swagger.responses[401] = {
+        schema: { $ref: "#/definitions/Error401" },
+        description: 'Não autorizado.' 
+     } 
+    */
+
+    /** #swagger.responses[403] = {
+        schema: { $ref: "#/definitions/Error403" },
+        description: 'Sem premissão.' 
+     } 
+    */
+
+    /** #swagger.responses[500] = {
+        schema: { $ref: "#/definitions/Error500" },
+        description: 'Erro interno.' 
+     }
+     */
+    return await permissaoController.desativarPermissao(request, response);
+}));
+
 routes.get(`/v1/permissoes`, asyncHandler(async (request, response) => {
     // #swagger.tags = ['Permissões']
     // #swagger.description = 'Lista de todas permissões cadastradas.'

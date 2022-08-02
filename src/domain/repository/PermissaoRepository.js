@@ -13,6 +13,19 @@ class PermissaoRepository {
             }
         });
     }
+    
+    async updatePermissaoAtivo(permissao) {
+        return await Permissao.update(
+            {
+                ativo: permissao.ativo
+            },
+            {
+                where: {
+                    id: permissao.id
+                }
+            }
+        );
+    }
 }
 
 export default PermissaoRepository;

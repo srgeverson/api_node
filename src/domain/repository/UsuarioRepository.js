@@ -123,14 +123,8 @@ class UsuarioRepository {
 
     async updateDataDeAcesso(usuario) {
         return await Usuario.update(
-            {
-                data_ultimo_acesso: moment.utc().format('YYYY-MM-DD HH:mm:ss Z')
-            },
-            {
-                where: {
-                    email: usuario.email
-                }
-            }
+            { data_ultimo_acesso: moment.utc() },
+            { where: { email: usuario.email } }
         );
     }
 

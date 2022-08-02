@@ -5,11 +5,13 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { enviarEmail } from '../../core/mail';
 import { validateEmail } from '../../core/helpers/utils';
+import PermissaoService from '../service/PermissaoService';
 
 class UsuarioService {
 
     constructor() {
         this.usuarioRepository = new UsuarioRepository();
+        this.permissaoService = new PermissaoService();
     }
 
     async buscarTodos() {
@@ -301,67 +303,55 @@ class UsuarioService {
 
         const usuarioEncontrado = await this.buscarPorId(usuario.id);
 
-        if (!usuarioEncontrado.ativo)
-            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Usuário informado não está ativo.');
-
         if (usuarioEncontrado.statusCode)
             return usuarioEncontrado;
 
+        if (!usuarioEncontrado.ativo)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Usuário informado não está ativo.');
+
         let permissoesOk = [];
         let permissoesNaoOk = [];
-         
-        await usuario.permissoes.forEach(async permissao => {
-            const permissaoEncontrada = await this.usuarioRepository
-                .findPermissaoByUsuario({ id: usuario.id, permissaoId: permissao })
-                .then(async permissoesDoUsuario => permissoesDoUsuario)
-                .catch((err) => {
-                    console.log(err);
-                });
-                if(permissaoEncontrada=== undefined){
-                    console.log(`..................${JSON.stringify(permissaoEncontrada)}`);
-
-                    permissoesOk.push({ id: permissao, mensagem: 'Erro ao verificar permissão.' });
-                }
-            else if (!permissaoEncontrada.ativo)
-                permissoesNaoOk.push({ id: permissao, mensagem: 'Permissão não está ativa.' });
-            else if (!permissaoEncontrada)
-                permissoesNaoOk.push({ id: permissao, mensagem: 'Permissão não existe.' });
-            else
-                permissoesOk.push({ id: permissao, mensagem: 'Permissão adicionada com sucesso.' });
+        const validarPermissoes = new Promise((resolve, reject) => {
+            usuario.permissoes.forEach(async (value, index, array) => {
+                await this.usuarioRepository
+                    .findPermissaoByUsuario({ id: usuario.id, permissaoId: value })
+                    .then(permissaoEncontrada => {
+                        const { permissoes } = permissaoEncontrada;
+                        if (permissoes) {
+                            console.log(permissoes[0].ativo)
+                            if (!permissoes[0].ativo)
+                                permissoesNaoOk.push({ id: value, mensagem: 'Usuário já possui esta permissão, porém a mesma não está ativa.' });
+                            else if (!permissoes[0].usuarios_permissoes.ativo)
+                                permissoesNaoOk.push({ id: value, mensagem: 'Usuário já possui esta permissão, porém a mesma está desativada para este usuário.' });
+                            else if (permissoes[0].ativo && permissoes[0].usuarios_permissoes.ativo)
+                                permissoesNaoOk.push({ id: value, mensagem: 'Usuário já possui esta permissão.' });
+                        }
+                        if (index === array.length - 1)
+                            resolve();
+                    }).catch(async () => {
+                        await this.permissaoService.buscarPorId(value)
+                            .then((permissao) => {
+                                if (permissao.statusCode)
+                                    permissoesNaoOk.push({ id: value, mensagem: 'Não existe permissão cadastrada com este id.' })
+                                else if (permissao.ativo)
+                                    permissoesOk.push({ id: value, mensagem: null });
+                                else if (!permissao.ativo)
+                                    permissoesNaoOk.push({ id: value, mensagem: 'Permissão não está ativa.' });
+                            }).catch(() => {
+                                permissoesNaoOk.push({ id: value, mensagem: 'Falha ao validar permissão.' })
+                            }
+                            );
+                        if (index === array.length - 1)
+                            resolve();
+                    });
+            });
         });
-        return { id: usuario.id, permissoesOk, permissoesNaoOk };
-        return { id: usuario.id, permissoes: permissoesOk.concat(permissoesNaoOk) };
-        return  await this.usuarioRepository
-        .findPermissaoByUsuario({ id: 1, permissaoId: 7 })
-        .then(async permissoesDoUsuario => permissoesDoUsuario)
-        .catch((err) => {
-        console.log(err);
-            return 'Erro ao pesquisar as permisses do usuário.'+JSON.stringify()
-        }
-        ); 
-        const permissaoEncontrada = await this.usuarioRepository
-            .findPermissaoByUsuario(usuario)
-            .then(async permissoesDoUsuario => permissoesDoUsuario)
-            .catch(() => 'Erro ao pesquisar as permisses do usuário.');            
-        //const codigoAcesso = Math.random().toString(36).substr(3, 10);
 
-        // return await this.usuarioRepository
-        //     .updateCodigoAcessoByEmail({ email: usuario.email, codigoAcesso })
-        //     .then(async () => {
-        //         await enviarEmail({
-        //             from: process.env.EMAIL_FROM,
-        //             to: [process.env.EMAIL_TO, usuarioExistente.email].join(';'),
-        //             subject: "API Node JS - Código de Validação/Recuperação de acesso",
-        //             text: `${usuarioExistente.nome} o código de validação de acesso é: ${codigoAcesso}`,
-        //             html: `<br />Acesse o sistema e digite o código recebido para ativar o acesso
-        //                     <br />${usuarioExistente.nome} o código de validação de acesso é: ${codigoAcesso}`
-        //         },
-        //             process.env.EMAIL_SERVICE);
-        //         return { mensagem: "Senha enviada por email, confira e siga as intruções." }
-        //     })
-        //     .catch(() => {
-        //         return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao recuperar a senha.');
-        //     });
+        return await validarPermissoes.then(() => {
+            return { id: usuario.id, permissoes: permissoesOk.concat(permissoesNaoOk) };
+        }).catch(() => {
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Falha durante o processo de validação de permissão.');
+        });
     }
 }
 

@@ -91,17 +91,17 @@ class UsuarioRepository {
     }
 
     async findPermissaoByUsuario(usuario) {
-        return await Usuario.findAll({
-            attributes: ['id', 'nome', 'email'],
+        return await Usuario.findOne({
+            attributes: [],
             include: [{
                 model: Permissao,
                 as: 'permissoes',
                 attributes: ['id', 'nome', 'descricao', 'ativo'],
                 through: {
-                    attributes: []
+                    attributes: ['id','ativo']
                 },
                 where: {
-                    permissaoId: usuario.permissaoId
+                    id: usuario.permissaoId
                 }
             }],
             where: {

@@ -5,6 +5,14 @@ const moment = require('moment-timezone');
 
 class UsuarioRepository {
 
+    async deleteByEmail(usuario) {
+        return await Usuario.destroy({ where: { email: usuario.email } });
+    }
+    
+    async deleteById(usuario) {
+        return await Usuario.destroy({ where: { id: usuario.id } });
+    }
+
     async findAll() {
         return await Usuario.findAll({
             attributes: ['id', 'nome', 'email', 'ativo']
@@ -26,6 +34,60 @@ class UsuarioRepository {
             }
         });
     }
+    
+    async findPermissaoByUsuario(usuario) {
+        return await Usuario.findOne({
+            attributes: [],
+            include: [{
+                model: Permissao,
+                as: 'permissoes',
+                attributes: ['id', 'nome', 'descricao', 'ativo'],
+                through: {
+                    attributes: ['id','ativo']
+                },
+                where: {
+                    id: usuario.permissaoId
+                }
+            }],
+            where: {
+                id: usuario.id
+            },
+        });
+    }
+
+    async findPermissoesByEmail(usuario) {
+        return await Usuario.findOne({
+            attributes: [],
+            include: [{
+                model: Permissao,
+                as: 'permissoes',
+                attributes: ['nome', 'ativo'],
+                through: {
+                    attributes: []
+                }
+            }],
+            where: {
+                email: usuario.email
+            },
+        });
+    }
+
+    async findPermissoesByUsuario(usuario) {
+        return await Usuario.findAll({
+            attributes: ['id', 'nome', 'email'],
+            include: [{
+                model: Permissao,
+                as: 'permissoes',
+                attributes: ['id', 'nome', 'descricao'],
+                through: {
+                    attributes: []
+                }
+            }],
+            where: {
+                id: usuario.id
+            },
+        });
+    }
 
     async saveUsuarioComSenha(usuario) {
         return await Usuario.create({
@@ -43,6 +105,33 @@ class UsuarioRepository {
             codigo_acesso: usuario.codigoAcesso,
             ativo: true
         });
+    }
+
+    async updateCodigoAcessoByEmail(usuario) {
+        return await Usuario.update(
+            {
+                senha: null,
+                codigo_acesso: usuario.codigoAcesso
+            },
+            {
+                where: {
+                    email: usuario.email
+                }
+            }
+        );
+    }
+
+    async updateDataDeAcesso(usuario) {
+        return await Usuario.update(
+            {
+                data_ultimo_acesso: moment.utc().format('YYYY-MM-DD HH:mm:ss Z')
+            },
+            {
+                where: {
+                    email: usuario.email
+                }
+            }
+        );
     }
 
     async updateUsuario(usuario) {
@@ -73,73 +162,6 @@ class UsuarioRepository {
         );
     }
 
-    async findPermissoesByUsuario(usuario) {
-        return await Usuario.findAll({
-            attributes: ['id', 'nome', 'email'],
-            include: [{
-                model: Permissao,
-                as: 'permissoes',
-                attributes: ['id', 'nome', 'descricao'],
-                through: {
-                    attributes: []
-                }
-            }],
-            where: {
-                id: usuario.id
-            },
-        });
-    }
-
-    async findPermissaoByUsuario(usuario) {
-        return await Usuario.findOne({
-            attributes: [],
-            include: [{
-                model: Permissao,
-                as: 'permissoes',
-                attributes: ['id', 'nome', 'descricao', 'ativo'],
-                through: {
-                    attributes: ['id','ativo']
-                },
-                where: {
-                    id: usuario.permissaoId
-                }
-            }],
-            where: {
-                id: usuario.id
-            },
-        });
-    }
-    
-    async findPermissoesByEmail(usuario) {
-        return await Usuario.findOne({
-            attributes: [],
-            include: [{
-                model: Permissao,
-                as: 'permissoes',
-                attributes: ['nome', 'ativo'],
-                through: {
-                    attributes: []
-                }
-            }],
-            where: {
-                email: usuario.email
-            },
-        });
-    }
-
-    async updateDataDeAcesso(usuario) {
-        return await Usuario.update(
-            {
-                data_ultimo_acesso: moment.utc().format('YYYY-MM-DD HH:mm:ss Z')
-            },
-            {
-                where: {
-                    email: usuario.email
-                }
-            }
-        );
-    }
-
     async updateSenhaByEmail(usuario) {
         return await Usuario.update(
             {
@@ -154,27 +176,6 @@ class UsuarioRepository {
         );
     }
 
-    async updateCodigoAcessoByEmail(usuario) {
-        return await Usuario.update(
-            {
-                senha: null,
-                codigo_acesso: usuario.codigoAcesso
-            },
-            {
-                where: {
-                    email: usuario.email
-                }
-            }
-        );
-    }
-
-    async deleteByEmail(usuario) {
-        return await Usuario.destroy({ where: { email: usuario.email } });
-    }
-    
-    async deleteById(usuario) {
-        return await Usuario.destroy({ where: { id: usuario.id } });
-    }
 }
 
 export default UsuarioRepository;

@@ -37,6 +37,235 @@
     }
   },
   "paths": {
+    "/v1/usuarios/recuperar-acesso": {
+      "put": {
+        "tags": [
+          "Autorização"
+        ],
+        "description": "Recupear a senha rebendo um código de acesso por email.",
+        "parameters": [
+          {
+            "name": "EmailUsuario",
+            "in": "body",
+            "description": "Receber um códifo por e-mail para validar acesso.",
+            "schema": {
+              "$ref": "#/definitions/EmailUsuario"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Informativo"
+            },
+            "description": "Código de acesso enviado."
+          },
+          "401": {
+            "schema": {
+              "$ref": "#/definitions/Error401"
+            },
+            "description": "Não autorizado."
+          },
+          "403": {
+            "schema": {
+              "$ref": "#/definitions/Error403"
+            },
+            "description": "Sem premissão."
+          },
+          "409": {
+            "schema": {
+              "$ref": "#/definitions/Error409"
+            },
+            "description": "Duplicidade de dados."
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/Error500"
+            },
+            "description": "Erro interno."
+          }
+        }
+      }
+    },
+    "/v1/usuarios/sem-senha": {
+      "post": {
+        "tags": [
+          "Autorização"
+        ],
+        "description": "Cadastrar um usuário com senha.",
+        "parameters": [
+          {
+            "name": "UsuarioSemSenha",
+            "in": "body",
+            "description": "Cadastrar usuário sem senha.",
+            "schema": {
+              "$ref": "#/definitions/UsuarioSemSenha"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Informativo"
+            },
+            "description": "Usuário cadastrado."
+          },
+          "401": {
+            "schema": {
+              "$ref": "#/definitions/Error401"
+            },
+            "description": "Não autorizado."
+          },
+          "403": {
+            "schema": {
+              "$ref": "#/definitions/Error403"
+            },
+            "description": "Sem premissão."
+          },
+          "409": {
+            "schema": {
+              "$ref": "#/definitions/Error409"
+            },
+            "description": "Duplicidade de dados."
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/Error500"
+            },
+            "description": "Erro interno."
+          }
+        }
+      }
+    },
+    "/v1/usuarios/token": {
+      "post": {
+        "tags": [
+          "Autorização"
+        ],
+        "description": "Gerar token de acesso para o usuário.",
+        "parameters": [
+          {
+            "name": "UsuarioLogin",
+            "in": "body",
+            "description": "Credenciais para geração do token de acesso.",
+            "schema": {
+              "$ref": "#/definitions/UsuarioLogin"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/UsuarioAutenticado"
+            },
+            "description": "Usuário autenticado."
+          },
+          "401": {
+            "schema": {
+              "$ref": "#/definitions/Error401"
+            },
+            "description": "Não autorizado."
+          },
+          "403": {
+            "schema": {
+              "$ref": "#/definitions/Error403"
+            },
+            "description": "Sem premissão."
+          },
+          "409": {
+            "schema": {
+              "$ref": "#/definitions/Error409"
+            },
+            "description": "Duplicidade de dados."
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/Error500"
+            },
+            "description": "Erro interno."
+          }
+        }
+      }
+    },
+    "/v1/usuarios/validar-acesso": {
+      "put": {
+        "tags": [
+          "Autorização"
+        ],
+        "description": "Valida o acesso do usuário a partir do código recebido por e-mail.",
+        "parameters": [
+          {
+            "name": "ValidarUsuario",
+            "in": "body",
+            "description": "Cadastrar usuário com senha.",
+            "schema": {
+              "$ref": "#/definitions/ValidarUsuario"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Usuario"
+            },
+            "description": "Usuário validado."
+          },
+          "401": {
+            "schema": {
+              "$ref": "#/definitions/Error401"
+            },
+            "description": "Não autorizado."
+          },
+          "403": {
+            "schema": {
+              "$ref": "#/definitions/Error403"
+            },
+            "description": "Sem premissão."
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/Error500"
+            },
+            "description": "Erro interno."
+          }
+        }
+      }
+    },
+    "/v1/permissoes": {
+      "get": {
+        "tags": [
+          "Permissões"
+        ],
+        "description": "Lista de todas permissões cadastradas.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Permissoes"
+            },
+            "description": "Lista de permissões."
+          },
+          "401": {
+            "schema": {
+              "$ref": "#/definitions/Error401"
+            },
+            "description": "Não autorizado."
+          },
+          "403": {
+            "schema": {
+              "$ref": "#/definitions/Error403"
+            },
+            "description": "Sem premissão."
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/Error500"
+            },
+            "description": "Erro interno."
+          }
+        }
+      }
+    },
     "/v1/permissoes/ativa/{id}": {
       "put": {
         "tags": [
@@ -117,235 +346,6 @@
         }
       }
     },
-    "/v1/permissoes": {
-      "get": {
-        "tags": [
-          "Permissões"
-        ],
-        "description": "Lista de todas permissões cadastradas.",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "schema": {
-              "$ref": "#/definitions/Permissoes"
-            },
-            "description": "Lista de permissões."
-          },
-          "401": {
-            "schema": {
-              "$ref": "#/definitions/Error401"
-            },
-            "description": "Não autorizado."
-          },
-          "403": {
-            "schema": {
-              "$ref": "#/definitions/Error403"
-            },
-            "description": "Sem premissão."
-          },
-          "500": {
-            "schema": {
-              "$ref": "#/definitions/Error500"
-            },
-            "description": "Erro interno."
-          }
-        }
-      }
-    },
-    "/v1/usuarios/token": {
-      "post": {
-        "tags": [
-          "Autorização"
-        ],
-        "description": "Gerar token de acesso para o usuário.",
-        "parameters": [
-          {
-            "name": "UsuarioLogin",
-            "in": "body",
-            "description": "Credenciais para geração do token de acesso.",
-            "schema": {
-              "$ref": "#/definitions/UsuarioLogin"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "schema": {
-              "$ref": "#/definitions/UsuarioAutenticado"
-            },
-            "description": "Usuário autenticado."
-          },
-          "401": {
-            "schema": {
-              "$ref": "#/definitions/Error401"
-            },
-            "description": "Não autorizado."
-          },
-          "403": {
-            "schema": {
-              "$ref": "#/definitions/Error403"
-            },
-            "description": "Sem premissão."
-          },
-          "409": {
-            "schema": {
-              "$ref": "#/definitions/Error409"
-            },
-            "description": "Duplicidade de dados."
-          },
-          "500": {
-            "schema": {
-              "$ref": "#/definitions/Error500"
-            },
-            "description": "Erro interno."
-          }
-        }
-      }
-    },
-    "/v1/usuarios/sem-senha": {
-      "post": {
-        "tags": [
-          "Autorização"
-        ],
-        "description": "Cadastrar um usuário com senha.",
-        "parameters": [
-          {
-            "name": "UsuarioSemSenha",
-            "in": "body",
-            "description": "Cadastrar usuário sem senha.",
-            "schema": {
-              "$ref": "#/definitions/UsuarioSemSenha"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "schema": {
-              "$ref": "#/definitions/Informativo"
-            },
-            "description": "Usuário cadastrado."
-          },
-          "401": {
-            "schema": {
-              "$ref": "#/definitions/Error401"
-            },
-            "description": "Não autorizado."
-          },
-          "403": {
-            "schema": {
-              "$ref": "#/definitions/Error403"
-            },
-            "description": "Sem premissão."
-          },
-          "409": {
-            "schema": {
-              "$ref": "#/definitions/Error409"
-            },
-            "description": "Duplicidade de dados."
-          },
-          "500": {
-            "schema": {
-              "$ref": "#/definitions/Error500"
-            },
-            "description": "Erro interno."
-          }
-        }
-      }
-    },
-    "/v1/usuarios/validar-acesso": {
-      "put": {
-        "tags": [
-          "Autorização"
-        ],
-        "description": "Valida o acesso do usuário a partir do código recebido por e-mail.",
-        "parameters": [
-          {
-            "name": "ValidarUsuario",
-            "in": "body",
-            "description": "Cadastrar usuário com senha.",
-            "schema": {
-              "$ref": "#/definitions/ValidarUsuario"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "schema": {
-              "$ref": "#/definitions/Usuario"
-            },
-            "description": "Usuário validado."
-          },
-          "401": {
-            "schema": {
-              "$ref": "#/definitions/Error401"
-            },
-            "description": "Não autorizado."
-          },
-          "403": {
-            "schema": {
-              "$ref": "#/definitions/Error403"
-            },
-            "description": "Sem premissão."
-          },
-          "500": {
-            "schema": {
-              "$ref": "#/definitions/Error500"
-            },
-            "description": "Erro interno."
-          }
-        }
-      }
-    },
-    "/v1/usuarios/recuperar-acesso": {
-      "put": {
-        "tags": [
-          "Autorização"
-        ],
-        "description": "Recupear a senha rebendo um código de acesso por email.",
-        "parameters": [
-          {
-            "name": "EmailUsuario",
-            "in": "body",
-            "description": "Receber um códifo por e-mail para validar acesso.",
-            "schema": {
-              "$ref": "#/definitions/EmailUsuario"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "schema": {
-              "$ref": "#/definitions/Informativo"
-            },
-            "description": "Código de acesso enviado."
-          },
-          "401": {
-            "schema": {
-              "$ref": "#/definitions/Error401"
-            },
-            "description": "Não autorizado."
-          },
-          "403": {
-            "schema": {
-              "$ref": "#/definitions/Error403"
-            },
-            "description": "Sem premissão."
-          },
-          "409": {
-            "schema": {
-              "$ref": "#/definitions/Error409"
-            },
-            "description": "Duplicidade de dados."
-          },
-          "500": {
-            "schema": {
-              "$ref": "#/definitions/Error500"
-            },
-            "description": "Erro interno."
-          }
-        }
-      }
-    },
     "/v1/usuarios": {
       "get": {
         "tags": [
@@ -392,56 +392,6 @@
         ]
       }
     },
-    "/v1/usuarios/com-senha": {
-      "post": {
-        "tags": [
-          "Usuários"
-        ],
-        "description": "Cadastrar um usuário com senha.",
-        "parameters": [
-          {
-            "name": "UsuarioComSenha",
-            "in": "body",
-            "description": "Cadastrar usuário com senha.",
-            "schema": {
-              "$ref": "#/definitions/UsuarioComSenha"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "schema": {
-              "$ref": "#/definitions/Usuario"
-            },
-            "description": "Usuário cadastrado."
-          },
-          "401": {
-            "schema": {
-              "$ref": "#/definitions/Error401"
-            },
-            "description": "Não autorizado."
-          },
-          "403": {
-            "schema": {
-              "$ref": "#/definitions/Error403"
-            },
-            "description": "Sem premissão."
-          },
-          "409": {
-            "schema": {
-              "$ref": "#/definitions/Error409"
-            },
-            "description": "Duplicidade de dados."
-          },
-          "500": {
-            "schema": {
-              "$ref": "#/definitions/Error500"
-            },
-            "description": "Erro interno."
-          }
-        }
-      }
-    },
     "/v1/usuarios/{id}": {
       "get": {
         "tags": [
@@ -485,12 +435,12 @@
         }
       }
     },
-    "/v1/usuarios/id/{id}": {
+    "/v1/usuarios/ativa/{id}": {
       "put": {
         "tags": [
           "Usuários"
         ],
-        "description": "Altera usuário por id.",
+        "description": "Ativa usuário por id.",
         "parameters": [
           {
             "name": "id",
@@ -498,22 +448,11 @@
             "required": true,
             "type": "string",
             "description": "Id do usuário."
-          },
-          {
-            "name": "AlterarUsuario",
-            "in": "body",
-            "description": "Cadastrar usuário com senha.",
-            "schema": {
-              "$ref": "#/definitions/AlterarUsuario"
-            }
           }
         ],
         "responses": {
-          "200": {
-            "schema": {
-              "$ref": "#/definitions/Usuario"
-            },
-            "description": "Usuário alterado."
+          "204": {
+            "description": "Usuário ativado."
           },
           "401": {
             "schema": {
@@ -576,12 +515,62 @@
         }
       }
     },
-    "/v1/usuarios/ativa/{id}": {
+    "/v1/usuarios/com-senha": {
+      "post": {
+        "tags": [
+          "Usuários"
+        ],
+        "description": "Cadastrar um usuário com senha.",
+        "parameters": [
+          {
+            "name": "UsuarioComSenha",
+            "in": "body",
+            "description": "Cadastrar usuário com senha.",
+            "schema": {
+              "$ref": "#/definitions/UsuarioComSenha"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/Usuario"
+            },
+            "description": "Usuário cadastrado."
+          },
+          "401": {
+            "schema": {
+              "$ref": "#/definitions/Error401"
+            },
+            "description": "Não autorizado."
+          },
+          "403": {
+            "schema": {
+              "$ref": "#/definitions/Error403"
+            },
+            "description": "Sem premissão."
+          },
+          "409": {
+            "schema": {
+              "$ref": "#/definitions/Error409"
+            },
+            "description": "Duplicidade de dados."
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/Error500"
+            },
+            "description": "Erro interno."
+          }
+        }
+      }
+    },
+    "/v1/usuarios/id/{id}": {
       "put": {
         "tags": [
           "Usuários"
         ],
-        "description": "Ativa usuário por id.",
+        "description": "Altera usuário por id.",
         "parameters": [
           {
             "name": "id",
@@ -589,11 +578,22 @@
             "required": true,
             "type": "string",
             "description": "Id do usuário."
+          },
+          {
+            "name": "AlterarUsuario",
+            "in": "body",
+            "description": "Cadastrar usuário com senha.",
+            "schema": {
+              "$ref": "#/definitions/AlterarUsuario"
+            }
           }
         ],
         "responses": {
-          "204": {
-            "description": "Usuário ativado."
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Usuario"
+            },
+            "description": "Usuário alterado."
           },
           "401": {
             "schema": {

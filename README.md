@@ -111,6 +111,10 @@ $ EMAIL_PASSWORD='Senha de acesso ao email.'
 
 💡 Caso deseje trabalhar com a aplicação com o TLS desabilitado coloque a proprieade como está abaixo:
 $ NODE_TLS_REJECT_UNAUTHORIZED=false
+
+### Multer é um middleware node.js para manipulação multipart/form-data, usado para o upload de arquivos. 
+$ npm install multer --save
+
 ```
 
 #### 🎲 Rodando a aplicação em ambiente para desenvolvimento

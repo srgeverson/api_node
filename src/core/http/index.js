@@ -18,7 +18,7 @@ class Http {
 
         //Publicando fotos
         this.app.use(
-            '/imagens',
+            '/v1/imagens',
             express.static(path.resolve(__dirname, "..", "..", "infrastructure", "tmp", "enviados"))
         );
 

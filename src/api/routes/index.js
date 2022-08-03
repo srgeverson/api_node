@@ -592,4 +592,10 @@ routes.post(`/v1/usuarios/:id/permissoes`, asyncHandler(async (request, response
 
 //#endregion Controla as permissões do usuário
 
+//#region  Imagens
+
+// v1/imagens/usuarios/nome_da_foto.png
+
+//#endregion Imagens
+
 export { routes }

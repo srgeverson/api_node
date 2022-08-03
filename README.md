@@ -115,6 +115,10 @@ $ NODE_TLS_REJECT_UNAUTHORIZED=false
 ### Multer é um middleware node.js para manipulação multipart/form-data, usado para o upload de arquivos. 
 $ npm install multer --save
 
+### Se desejar utilizar o grant_type password do OAuth Adicione as propriedades abaixo no arquivo .env
+$ CLIENT_ID='Nome de usuário para a autenticação da API.'
+$ CLIENT_SECRET='Senha de usuário para a autenticação da API.'
+
 ```
 
 #### 🎲 Rodando a aplicação em ambiente para desenvolvimento

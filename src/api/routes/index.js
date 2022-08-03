@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import asyncHandler from 'express-async-handler';
 import multer from 'multer';
-import auth from '../../core/auth';
+import { client, resourceOwner } from '../../core/auth';
 import image from '../../core/image';
 import PermissaoController from '../controller/PermissaoController';
 import UsuarioController from '../controller/UsuarioController';
@@ -101,7 +101,7 @@ routes.post(`/v1/usuarios/sem-senha`, asyncHandler(async (request, response) => 
     return await usuarioController.cadastrarUsuarioSemSenha(request, response);
 }));
 
-routes.post(`/v1/usuarios/token`, asyncHandler(async (request, response) => {
+routes.post(`/v1/usuarios/token`, client,asyncHandler(async (request, response) => {
     // #swagger.tags = ['Autorização']
     // #swagger.description = 'Gerar token de acesso para o usuário.'
 
@@ -273,7 +273,7 @@ routes.put(`/v1/permissoes/desativa/:id`, asyncHandler(async (request, response)
 
 //#region CRUD Usuário
 
-routes.get(`/v1/usuarios`, auth, asyncHandler(async (request, response) => {
+routes.get(`/v1/usuarios`, resourceOwner, asyncHandler(async (request, response) => {
     // #swagger.tags = ['Usuários']
     // #swagger.description = 'Lista de todos usuários cadastrados.'
 
@@ -344,7 +344,7 @@ routes.put(`/v1/usuarios/alterar-foto`, uploadImage.single('foto'), asyncHandler
     // #swagger.tags = ['Usuários']
     // #swagger.description = 'Atualizar foto perfil.'
 
-     // #swagger.consumes  = ['multipart/form-data']
+    // #swagger.consumes  = ['multipart/form-data']
 
     /*  #swagger.parameters['UsuarioFoto'] = {
         in: 'body',
@@ -522,7 +522,7 @@ routes.put(`/v1/usuarios/id/:id`, asyncHandler(async (request, response) => {
 routes.get(`/v1/usuarios/:id/permissoes`, asyncHandler(async (request, response) => {
     // #swagger.tags = ['UsuáriosPermissões']
     // #swagger.description = 'Lista de todas permissões do usuário.'
-    
+
     // #swagger.parameters['id'] = { description: 'Id do usuário.' }
 
     /** #swagger.responses[200] = {
@@ -548,7 +548,7 @@ routes.get(`/v1/usuarios/:id/permissoes`, asyncHandler(async (request, response)
         description: 'Erro interno.' 
      }
      */
-   
+
     return await usuarioController.todasPermissoesDoUsuario(request, response);
 }));
 
@@ -585,7 +585,7 @@ routes.post(`/v1/usuarios/:id/permissoes`, asyncHandler(async (request, response
         description: 'Erro interno.' 
      }
      */
-   
+
     return await usuarioController.incluirPermissoesAoUsuario(request, response);
 }));
 

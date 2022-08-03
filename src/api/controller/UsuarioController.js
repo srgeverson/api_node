@@ -24,9 +24,9 @@ class UsuarioController {
         if (usuarioFotoAlterada.statusCode)
             return response.status(usuarioFotoAlterada.statusCode).json(usuarioFotoAlterada);
         else
-           return response.status(StatusCode.SuccessOK).json(usuarioFotoAlterada);
+            return response.status(StatusCode.SuccessOK).json(usuarioFotoAlterada);
     }
-   
+
 
     async ativarUsuario(request, response) {
         const { id } = request.params;
@@ -36,7 +36,7 @@ class UsuarioController {
         else
             return response.status(StatusCode.SuccessNoContent).json(usuarioAtivado);
     }
-   
+
     async buscarUsuarioPorId(request, response) {
         const { id } = request.params;
         const usuarioEncontrado = await this.usuarioService.buscarPorId(id);
@@ -54,7 +54,7 @@ class UsuarioController {
         else
             return response.status(StatusCode.SuccessOK).json(usuarioEncontrado);
     }
-    
+
     async cadastrarSenhaComCodigo(request, response) {
         const { email, senha, codigoAcesso } = request.body;
         const usuarioAutorizado = await this.usuarioService.cadastrarSenhaComCodigo({ email, senha, codigoAcesso });
@@ -112,8 +112,16 @@ class UsuarioController {
     }
 
     async login(request, response) {
-        const { email, senha } = request.body;
-        const usuarioAutorizado = await this.usuarioService.validarAcesso({ email, senha });
+        let usuarioAutorizado = null;
+        const { grant_type, username, password, email, senha } = request.body;
+        switch (grant_type) {
+            case 'password':
+                usuarioAutorizado = await this.usuarioService.validarAcesso({ email: username, senha: password });
+                break;
+            default:
+                usuarioAutorizado = await this.usuarioService.validarAcesso({email, senha});
+                break
+        }
         if (usuarioAutorizado.statusCode)
             return response.status(usuarioAutorizado.statusCode).json(usuarioAutorizado);
         else

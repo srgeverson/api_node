@@ -1,8 +1,9 @@
 import { StatusCode } from 'status-code-enum';
-import { ErrorHandler } from '../../core/helpers/error';
-import UsuarioRepository from '../repository/UsuarioRepository';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import fs from 'fs';
+import { ErrorHandler } from '../../core/helpers/error';
+import UsuarioRepository from '../repository/UsuarioRepository';
 import { enviarEmail } from '../../core/mail';
 import { validateEmail } from '../../core/helpers/utils';
 import PermissaoService from '../service/PermissaoService';
@@ -52,6 +53,36 @@ class UsuarioService {
             .updateUsuarioAtivo(usuario)
             .then(async permissoesByUsuario => {
                 return permissoesByUsuario;
+            })
+            .catch(() => {
+                return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao alterar usuário o senha.');
+            });
+    }
+
+    async alterarFotoUsuario(usuario) {
+
+        if (!usuario.foto)
+        return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Foto inválida ou não informada.');
+
+        const id = usuario.id;
+        console.log(usuario);
+        const usuarioEncontrado = await this.buscarPorId(id);
+        if (usuarioEncontrado.statusCode)
+            return usuarioEncontrado;
+
+        const nomeFoto = usuario.foto.filename;
+
+        const fotoAntiga = usuario.foto.destination + "/" + nomeFoto;
+
+        fs.access(fotoAntiga, (err) => {
+            if (!err)
+                fs.unlink(fotoAntiga, () => console.log('Imagem excluida sucesso'));
+        });
+
+        return await this.usuarioRepository
+            .updateUsuario(usuario)
+            .then(async id => {
+                return this.buscarPorId(id);
             })
             .catch(() => {
                 return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao alterar usuário o senha.');

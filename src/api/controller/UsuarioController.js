@@ -16,7 +16,18 @@ class UsuarioController {
         else
             return response.status(StatusCode.SuccessOK).json(usuarioAlterado);
     }
-    
+
+    async alterarFotoUsuario(request, response) {
+        const { id } = request.body;
+        const foto = request.file;
+        const usuarioFotoAlterada = await this.usuarioService.alterarFotoUsuario({ id, foto });
+        if (usuarioFotoAlterada.statusCode)
+            return response.status(usuarioFotoAlterada.statusCode).json(usuarioFotoAlterada);
+        else
+           return response.status(StatusCode.SuccessOK).json(usuarioFotoAlterada);
+    }
+   
+
     async ativarUsuario(request, response) {
         const { id } = request.params;
         const usuarioAtivado = await this.usuarioService.ativarOuDesativarUsuario({ id, ativo: true });

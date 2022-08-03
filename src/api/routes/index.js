@@ -1,11 +1,14 @@
 import { Router } from 'express';
 import asyncHandler from 'express-async-handler';
+import multer from 'multer';
 import auth from '../../core/auth';
+import image from '../../core/image';
 import PermissaoController from '../controller/PermissaoController';
 import UsuarioController from '../controller/UsuarioController';
 
 const swaggerFile = require('../controller/doc/swagger.json');
 const swaggerUi = require('swagger-ui-express');
+const uploadImage = multer(image);
 const routes = Router();
 const permissaoController = new PermissaoController();
 const usuarioController = new UsuarioController();
@@ -335,6 +338,46 @@ routes.get(`/v1/usuarios/:id`, asyncHandler(async (request, response) => {
      }
      */
     return await usuarioController.buscarUsuarioPorId(request, response);
+}));
+
+routes.put(`/v1/usuarios/alterar-foto`, uploadImage.single('foto'), asyncHandler(async (request, response) => {
+    // #swagger.tags = ['Usuários']
+    // #swagger.description = 'Atualizar foto perfil.'
+
+     // #swagger.consumes  = ['multipart/form-data']
+
+    /*  #swagger.parameters['UsuarioFoto'] = {
+        in: 'body',
+        description: 'Alterar foto perfil.',
+        schema: { $ref: '#/definitions/UsuarioFoto' }
+    } */
+
+    // #swagger.responses[204] = { description: 'Foto alterada.' } 
+
+    /** #swagger.responses[401] = {
+        schema: { $ref: "#/definitions/Error401" },
+        description: 'Não autorizado.' 
+     } 
+    */
+
+    /** #swagger.responses[403] = {
+        schema: { $ref: "#/definitions/Error403" },
+        description: 'Sem premissão.' 
+     } 
+    */
+
+    /** #swagger.responses[409] = {
+        schema: { $ref: "#/definitions/Error409" },
+        description: 'Duplicidade de dados.' 
+     } 
+    */
+
+    /** #swagger.responses[500] = {
+        schema: { $ref: "#/definitions/Error500" },
+        description: 'Erro interno.' 
+     }
+     */
+    return await usuarioController.alterarFotoUsuario(request, response);
 }));
 
 routes.put(`/v1/usuarios/ativa/:id`, asyncHandler(async (request, response) => {

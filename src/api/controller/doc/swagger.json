@@ -435,6 +435,56 @@
         }
       }
     },
+    "/v1/usuarios/alterar-foto": {
+      "put": {
+        "tags": [
+          "Usuários"
+        ],
+        "description": "Atualizar foto perfil.",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "UsuarioFoto",
+            "in": "body",
+            "description": "Alterar foto perfil.",
+            "schema": {
+              "$ref": "#/definitions/UsuarioFoto"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Foto alterada."
+          },
+          "401": {
+            "schema": {
+              "$ref": "#/definitions/Error401"
+            },
+            "description": "Não autorizado."
+          },
+          "403": {
+            "schema": {
+              "$ref": "#/definitions/Error403"
+            },
+            "description": "Sem premissão."
+          },
+          "409": {
+            "schema": {
+              "$ref": "#/definitions/Error409"
+            },
+            "description": "Duplicidade de dados."
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/Error500"
+            },
+            "description": "Erro interno."
+          }
+        }
+      }
+    },
     "/v1/usuarios/ativa/{id}": {
       "put": {
         "tags": [
@@ -976,6 +1026,19 @@
             "type": "string",
             "example": "Permissão já existe."
           }
+        }
+      }
+    },
+    "UsuarioFoto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "example": 1
+        },
+        "foto": {
+          "type": "string",
+          "example": "/C:/Users/user/Pictures/nome_imagem.PNG"
         }
       }
     },

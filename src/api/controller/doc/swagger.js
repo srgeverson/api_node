@@ -101,6 +101,10 @@ const docs = {
             { id: 1, mensagem: 'Permissão cadastrada.' },
             { id: 2, mensagem: 'Permissão já existe.' }
         ],
+        UsuarioFoto:{
+            id: 1,
+            foto: '/C:/Users/user/Pictures/nome_imagem.PNG'
+        },
         Informativo: { mensagem: 'Informação da operação.' },
         Error400: {
             status: 'informativo',

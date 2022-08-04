@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  nodejs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nodejs
+    container_name: nodejs
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - DATABASE_DIALECT=$DATABASE_DIALECT
+      - DATABASE_NAME=$DATABASE_NAME
+      - DATABASE_HOST=$DATABASE_HOST
+      - DATABASE_USERNAME=$DATABASE_USERNAME
+      - DATABASE_PASSWORD=$DATABASE_PASSWORD
+      - KEY_SECRET=$KEY_SECRET
+      - EXPIRES_IN=$EXPIRES_IN
+      - NODE_TLS_REJECT_UNAUTHORIZED=$NODE_TLS_REJECT_UNAUTHORIZED
+      - EMAIL_SERVICE=$EMAIL_SERVICE
+      - EMAIL_HOST=$EMAIL_HOST
+      - EMAIL_PORT=$EMAIL_PORT
+      - EMAIL_SSL=$EMAIL_SSL
+      - EMAIL_USER=$EMAIL_USER
+      - EMAIL_PASSWORD=$EMAIL_PASSWORD
+      - EMAIL_TO=$EMAIL_TO
+      - EMAIL_FROM=$EMAIL_FROM
+      - CLIENT_ID=$CLIENT_ID
+      - CLIENT_SECRET=$CLIENT_SECRET
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/home/node/app
+      - node_modules:/home/node/app/node_modules
+    networks:
+      - app-network
+    command: ./wait-for.sh 192.168.0.103:5432 -- /home/node/app/node_modules/.bin/nodemon app.js
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  node_modules:        

@@ -136,6 +136,7 @@ $ npm install
 
 ### Iniciando a aplicação em modo de produção.
 $ npm start
+$ docker-compose up -d
 
 ### Iniciando a aplicação em modo de desenvolvimento.
 $ npm run development

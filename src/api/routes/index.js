@@ -101,7 +101,7 @@ routes.post(`/v1/usuarios/sem-senha`, asyncHandler(async (request, response) => 
     return await usuarioController.cadastrarUsuarioSemSenha(request, response);
 }));
 
-routes.post(`/v1/usuarios/token`, client,asyncHandler(async (request, response) => {
+routes.post(`/v1/usuarios/token`, client, asyncHandler(async (request, response) => {
     // #swagger.tags = ['Autorização']
     // #swagger.description = 'Gerar token de acesso para o usuário.'
 
@@ -183,9 +183,11 @@ routes.put(`/v1/usuarios/validar-acesso`, asyncHandler(async (request, response)
 
 //#region CRUD Permissão
 
-routes.get(`/v1/permissoes`, asyncHandler(async (request, response) => {
+routes.get(`/v1/permissoes`, resourceOwner, asyncHandler(async (request, response) => {
     // #swagger.tags = ['Permissões']
     // #swagger.description = 'Lista de todas permissões cadastradas.'
+
+    // #swagger.security = [{'Autorização':[]}]     
 
     /** #swagger.responses[200] = {
         schema: { $ref: "#/definitions/Permissoes" },
@@ -213,9 +215,11 @@ routes.get(`/v1/permissoes`, asyncHandler(async (request, response) => {
     return await permissaoController.todasPermissoes(request, response);
 }));
 
-routes.put(`/v1/permissoes/ativa/:id`, asyncHandler(async (request, response) => {
+routes.put(`/v1/permissoes/ativa/:id`, resourceOwner, asyncHandler(async (request, response) => {
     // #swagger.tags = ['Permissões']
     // #swagger.description = 'Ativa permissão por id.'
+
+    // #swagger.security = [{'Autorização':[]}]     
 
     // #swagger.parameters['id'] = { description: 'Id do permissão.' }
 
@@ -241,9 +245,11 @@ routes.put(`/v1/permissoes/ativa/:id`, asyncHandler(async (request, response) =>
     return await permissaoController.ativarPermissao(request, response);
 }));
 
-routes.put(`/v1/permissoes/desativa/:id`, asyncHandler(async (request, response) => {
+routes.put(`/v1/permissoes/desativa/:id`, resourceOwner, asyncHandler(async (request, response) => {
     // #swagger.tags = ['Permissões']
     // #swagger.description = 'Desativa permissão por id.'
+
+    // #swagger.security = [{'Autorização':[]}]     
 
     // #swagger.parameters['id'] = { description: 'Id do permissão.' }
 
@@ -273,14 +279,11 @@ routes.put(`/v1/permissoes/desativa/:id`, asyncHandler(async (request, response)
 
 //#region CRUD Usuário
 
-routes.get(`/v1/usuarios`, resourceOwner, asyncHandler(async (request, response) => {
+routes.get(`/v1/usuarios`, resourceOwner, resourceOwner, asyncHandler(async (request, response) => {
     // #swagger.tags = ['Usuários']
     // #swagger.description = 'Lista de todos usuários cadastrados.'
 
-    /* #swagger.security = [{
-            "oAuthSample": []
-        }] 
-    */
+    // #swagger.security = [{'Autorização':[]}] 
 
     /** #swagger.responses[200] = {
         schema: { $ref: "#/definitions/Usuarios" },
@@ -312,6 +315,8 @@ routes.get(`/v1/usuarios/:id`, asyncHandler(async (request, response) => {
     // #swagger.tags = ['Usuários']
     // #swagger.description = 'Consulta usuário por id.'
 
+    // #swagger.security = [{'Autorização':[]}] 
+
     //  #swagger.parameters['id'] = { description: 'Id do usuário.' }
 
     /** #swagger.responses[200] = {
@@ -340,9 +345,11 @@ routes.get(`/v1/usuarios/:id`, asyncHandler(async (request, response) => {
     return await usuarioController.buscarUsuarioPorId(request, response);
 }));
 
-routes.put(`/v1/usuarios/alterar-foto`, uploadImage.single('foto'), asyncHandler(async (request, response) => {
+routes.put(`/v1/usuarios/alterar-foto`, resourceOwner, uploadImage.single('foto'), asyncHandler(async (request, response) => {
     // #swagger.tags = ['Usuários']
     // #swagger.description = 'Atualizar foto perfil.'
+
+    // #swagger.security = [{'Autorização':[]}] 
 
     // #swagger.consumes  = ['multipart/form-data']
 
@@ -380,9 +387,11 @@ routes.put(`/v1/usuarios/alterar-foto`, uploadImage.single('foto'), asyncHandler
     return await usuarioController.alterarFotoUsuario(request, response);
 }));
 
-routes.put(`/v1/usuarios/ativa/:id`, asyncHandler(async (request, response) => {
+routes.put(`/v1/usuarios/ativa/:id`, resourceOwner, asyncHandler(async (request, response) => {
     // #swagger.tags = ['Usuários']
     // #swagger.description = 'Ativa usuário por id.'
+
+    // #swagger.security = [{'Autorização':[]}] 
 
     // #swagger.parameters['id'] = { description: 'Id do usuário.' }
 
@@ -408,9 +417,11 @@ routes.put(`/v1/usuarios/ativa/:id`, asyncHandler(async (request, response) => {
     return await usuarioController.ativarUsuario(request, response);
 }));
 
-routes.put(`/v1/usuarios/desativa/:id`, asyncHandler(async (request, response) => {
+routes.put(`/v1/usuarios/desativa/:id`, resourceOwner, asyncHandler(async (request, response) => {
     // #swagger.tags = ['Usuários']
     // #swagger.description = 'Desativa usuário por id.'
+
+    // #swagger.security = [{'Autorização':[]}] 
 
     // #swagger.parameters['id'] = { description: 'Id do usuário.' }
 
@@ -436,9 +447,11 @@ routes.put(`/v1/usuarios/desativa/:id`, asyncHandler(async (request, response) =
     return await usuarioController.desativarUsuario(request, response);
 }));
 
-routes.post(`/v1/usuarios/com-senha`, asyncHandler(async (request, response) => {
+routes.post(`/v1/usuarios/com-senha`, resourceOwner, asyncHandler(async (request, response) => {
     // #swagger.tags = ['Usuários']
     // #swagger.description = 'Cadastrar um usuário com senha.'
+
+    // #swagger.security = [{'Autorização':[]}] 
 
     /*  #swagger.parameters['UsuarioComSenha'] = {
         in: 'body',
@@ -478,9 +491,11 @@ routes.post(`/v1/usuarios/com-senha`, asyncHandler(async (request, response) => 
     return await usuarioController.cadastrarUsuarioComSenha(request, response);
 }));
 
-routes.put(`/v1/usuarios/id/:id`, asyncHandler(async (request, response) => {
+routes.put(`/v1/usuarios/id/:id`, resourceOwner, asyncHandler(async (request, response) => {
     // #swagger.tags = ['Usuários']
     // #swagger.description = 'Altera usuário por id.'
+
+    // #swagger.security = [{'Autorização':[]}] 
 
     //  #swagger.parameters['id'] = { description: 'Id do usuário.' },
     /*  #swagger.parameters['AlterarUsuario'] = {
@@ -523,6 +538,8 @@ routes.get(`/v1/usuarios/:id/permissoes`, asyncHandler(async (request, response)
     // #swagger.tags = ['UsuáriosPermissões']
     // #swagger.description = 'Lista de todas permissões do usuário.'
 
+    // #swagger.security = [{'Autorização':[]}] 
+
     // #swagger.parameters['id'] = { description: 'Id do usuário.' }
 
     /** #swagger.responses[200] = {
@@ -555,6 +572,8 @@ routes.get(`/v1/usuarios/:id/permissoes`, asyncHandler(async (request, response)
 routes.post(`/v1/usuarios/:id/permissoes`, asyncHandler(async (request, response) => {
     // #swagger.tags = ['UsuáriosPermissões']
     // #swagger.description = 'Cadastar várias permissões ao usuário.'
+
+    // #swagger.security = [{'Autorização':[]}] 
 
     /*  #swagger.parameters['CadastrarPermissoes'] = {
         in: 'body',

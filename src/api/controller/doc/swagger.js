@@ -138,18 +138,12 @@ const docs = {
         }
     },
     securityDefinitions: {
-        oAuthSample: {
+        Autorização: {
             type: 'oauth2',
             tokenUrl: `http://${process.env.SERVER_URL || 'localhost'}:${process.env.PORT || 8080}/v1/usuarios/token`,
             flow: 'password',
             scopes: {}
         }
-        // apiKeyAuth: {
-        //     type: 'apiKey',
-        //     in: 'header', // can be 'header', 'query' or 'cookie'
-        //     name: 'X-API-KEY', // name of the header, query parameter or cookie
-        //     description: 'Some description...'
-        //   }
     }
 }
 

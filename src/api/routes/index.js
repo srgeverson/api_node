@@ -17,7 +17,7 @@ routes.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 //#region Fluxo de Autorização
 
-routes.put(`/v1/usuarios/recuperar-acesso`, asyncHandler(async (request, response) => {
+routes.put(`/v1/usuarios/recuperar-acesso`, client, asyncHandler(async (request, response) => {
     // #swagger.tags = ['Autorização']
     // #swagger.description = 'Recupear a senha rebendo um código de acesso por email.'
 
@@ -59,7 +59,7 @@ routes.put(`/v1/usuarios/recuperar-acesso`, asyncHandler(async (request, respons
     return await usuarioController.enviarCodigoAcessoParaEmail(request, response);
 }));
 
-routes.post(`/v1/usuarios/sem-senha`, asyncHandler(async (request, response) => {
+routes.post(`/v1/usuarios/sem-senha`, client, asyncHandler(async (request, response) => {
     // #swagger.tags = ['Autorização']
     // #swagger.description = 'Cadastrar um usuário com senha.'
 
@@ -143,7 +143,7 @@ routes.post(`/v1/usuarios/token`, client, asyncHandler(async (request, response)
     return await usuarioController.login(request, response);
 }));
 
-routes.put(`/v1/usuarios/validar-acesso`, asyncHandler(async (request, response) => {
+routes.put(`/v1/usuarios/validar-acesso`, client, asyncHandler(async (request, response) => {
     // #swagger.tags = ['Autorização']
     // #swagger.description = 'Valida o acesso do usuário a partir do código recebido por e-mail.'
 

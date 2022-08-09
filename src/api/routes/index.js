@@ -279,7 +279,7 @@ routes.put(`/v1/permissoes/desativa/:id`, resourceOwner, asyncHandler(async (req
 
 //#region CRUD Usuário
 
-routes.get(`/v1/usuarios`, resourceOwner, resourceOwner, asyncHandler(async (request, response) => {
+routes.get(`/v1/usuarios`, resourceOwner, asyncHandler(async (request, response) => {
     // #swagger.tags = ['Usuários']
     // #swagger.description = 'Lista de todos usuários cadastrados.'
 
@@ -311,7 +311,7 @@ routes.get(`/v1/usuarios`, resourceOwner, resourceOwner, asyncHandler(async (req
     return await usuarioController.todosUsuarios(request, response);
 }));
 
-routes.get(`/v1/usuarios/:id`, asyncHandler(async (request, response) => {
+routes.get(`/v1/usuarios/:id`,  resourceOwner, asyncHandler(async (request, response) => {
     // #swagger.tags = ['Usuários']
     // #swagger.description = 'Consulta usuário por id.'
 
@@ -534,7 +534,7 @@ routes.put(`/v1/usuarios/id/:id`, resourceOwner, asyncHandler(async (request, re
 
 //#region Controla as permissões do usuário
 
-routes.get(`/v1/usuarios/:id/permissoes`, asyncHandler(async (request, response) => {
+routes.get(`/v1/usuarios/:id/permissoes`, resourceOwner, asyncHandler(async (request, response) => {
     // #swagger.tags = ['UsuáriosPermissões']
     // #swagger.description = 'Lista de todas permissões do usuário.'
 
@@ -569,7 +569,7 @@ routes.get(`/v1/usuarios/:id/permissoes`, asyncHandler(async (request, response)
     return await usuarioController.todasPermissoesDoUsuario(request, response);
 }));
 
-routes.post(`/v1/usuarios/:id/permissoes`, asyncHandler(async (request, response) => {
+routes.post(`/v1/usuarios/:id/permissoes`,  resourceOwner, asyncHandler(async (request, response) => {
     // #swagger.tags = ['UsuáriosPermissões']
     // #swagger.description = 'Cadastar várias permissões ao usuário.'
 

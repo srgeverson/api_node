@@ -9,7 +9,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
       },
-      usuarioId: {
+      usuario_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -17,7 +17,7 @@ module.exports = {
           key: 'id'
         }
       },
-      permissaoId: {
+      permissao_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -30,7 +30,14 @@ module.exports = {
         allowNull: false,
         defaultValue: true
       },
-
+      data_cadastro: {
+        type: "TIMESTAMP",
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
+      },
+      data_operacao:{
+        type: "TIMESTAMP",
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
+      }
     })
   },
 

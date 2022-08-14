@@ -21,6 +21,14 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         allowNUll: false,
         defaultValue: true
+      },
+      data_cadastro: {
+        type: "TIMESTAMP",
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
+      },
+      data_operacao:{
+        type: "TIMESTAMP",
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
       }
     })
   },

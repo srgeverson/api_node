@@ -94,7 +94,9 @@ class UsuarioRepository {
             nome: usuario.nome,
             email: usuario.email,
             senha: usuario.senha,
-            ativo: true
+            ativo: true,
+            data_cadastro: moment.utc(),
+            data_operacao: moment.utc()
         });
     }
 
@@ -103,7 +105,9 @@ class UsuarioRepository {
             nome: usuario.nome,
             email: usuario.email,
             codigo_acesso: usuario.codigoAcesso,
-            ativo: true
+            ativo: true,
+            data_cadastro: moment.utc(),
+            data_operacao: moment.utc()
         });
     }
 
@@ -111,7 +115,9 @@ class UsuarioRepository {
         return await Usuario.update(
             {
                 senha: null,
-                codigo_acesso: usuario.codigoAcesso
+                codigo_acesso: usuario.codigoAcesso,
+                data_ultimo_acesso: moment.utc(),
+                data_operacao: moment.utc()
             },
             {
                 where: {
@@ -133,7 +139,8 @@ class UsuarioRepository {
             {
                 nome: usuario.nome,
                 email: usuario.email,
-                ativo: usuario.ativo
+                ativo: usuario.ativo,
+                data_operacao: moment.utc()
             },
             {
                 where: {
@@ -146,7 +153,8 @@ class UsuarioRepository {
     async updateUsuarioAtivo(usuario) {
         return await Usuario.update(
             {
-                ativo: usuario.ativo
+                ativo: usuario.ativo,
+                data_operacao: moment.utc()
             },
             {
                 where: {
@@ -160,7 +168,8 @@ class UsuarioRepository {
         return await Usuario.update(
             {
                 senha: usuario.senha,
-                codigo_acesso: null
+                codigo_acesso: null,
+                data_operacao: moment.utc()
             },
             {
                 where: {

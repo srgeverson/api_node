@@ -28,7 +28,7 @@ class Usuario extends Model {
         this.belongsToMany(models.Permissao, {
             through: 'usuarios_permissoes',
             foreignKey: 'usuario_id',
-            as: 'permissoesId'
+            as: 'permissoes'
         });
     }
 }

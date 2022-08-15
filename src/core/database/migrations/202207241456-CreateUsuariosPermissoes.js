@@ -7,23 +7,19 @@ module.exports = {
         type: Sequelize.INTEGER,
         primaryKey: true,
         allowNull: false,
-        autoIncrement: true,
+        autoIncrement: true
       },
       usuario_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {
-          model: 'usuarios',
-          key: 'id'
-        }
+        references: { model: 'usuarios', key: 'id'},
+        onDelete: 'CASCADE'
       },
       permissao_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {
-          model: 'permissoes',
-          key: 'id'
-        }
+        references: { model: 'permissoes', key: 'id' },
+        onDelete: 'CASCADE'
       },
       ativo: {
         type: Sequelize.BOOLEAN,
@@ -31,11 +27,11 @@ module.exports = {
         defaultValue: true
       },
       data_cadastro: {
-        type: "TIMESTAMP",
+        type: Sequelize.DATE,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
       },
       data_operacao:{
-        type: "TIMESTAMP",
+        type: Sequelize.DATE,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
       }
     })

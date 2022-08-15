@@ -57,6 +57,9 @@ $ npm install sequelize --save
 ### Instalando o driver do Postgres.
 $ npm install pg pg-hstore --save
 
+### Instalando o driver do SQL Server
+$ npm install tedious --save
+
 ### Apresenta os tipo de dados em tempo de execução
 $ npm install reflect-metadata --save
 
@@ -68,6 +71,9 @@ $ DATABASE_USERNAME='Usuário do banco de dados.'
 $ DATABASE_PASSWORD='Senha do banco de dados.'
 
 💡 As tabelas e os dados inicias da aplicação estão dentro das pastas /api_node/src/core/database/migraions e /api_node/src/core/database/seeders respectivamente.
+
+# Criando uma migration
+$ npx sequelize migration:create --name=NOME_DO_ARQUIVVO_A_SER_GERADO
 
 # Rodando as migrations.
 $ npx sequelize db:migrate

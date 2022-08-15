@@ -19,7 +19,7 @@ module.exports = {
         type: Sequelize.STRING(6),
       },
       data_operacao: {
-        type: "TIMESTAMP",
+        type: Sequelize.DATE,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
       },
       valor_anterior: {

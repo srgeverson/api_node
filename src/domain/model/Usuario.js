@@ -11,8 +11,9 @@ class Usuario extends Model {
                 senha: { type: Sequelize.STRING(255) },
                 ativo: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: true },
                 codigo_acesso: { type: Sequelize.STRING(10) },
-                data_cadastro: { type: "TIMESTAMP" },
-                data_ultimo_acesso: { type: "TIMESTAMP" },
+                data_cadastro: { type: Sequelize.DATE },
+                data_operacao: { type: Sequelize.DATE },
+                data_ultimo_acesso: { type: Sequelize.DATE },
             },
             {
                 sequelize,
@@ -27,7 +28,7 @@ class Usuario extends Model {
         this.belongsToMany(models.Permissao, {
             through: 'usuarios_permissoes',
             foreignKey: 'usuario_id',
-            as: 'permissoes'
+            as: 'permissoesId'
         });
     }
 }

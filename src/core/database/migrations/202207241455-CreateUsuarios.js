@@ -26,15 +26,16 @@ module.exports = {
         type: Sequelize.STRING(10),
       },
       data_cadastro: {
-        type: "TIMESTAMP",
+        type: Sequelize.DATE,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
       },
       data_operacao:{
-        type: "TIMESTAMP",
+        type: Sequelize.DATE,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
       },
       data_ultimo_acesso: {
-        type: "TIMESTAMP"
+        type: Sequelize.DATE,
+        defaultValue: null
       },
     })
   },

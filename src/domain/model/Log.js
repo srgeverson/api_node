@@ -10,7 +10,7 @@ class Log extends Model {
                 tabela_coluna: { type: Sequelize.STRING(100) },
                 tabela_id: { type: Sequelize.INTEGER },
                 operacao: { type: Sequelize.STRING(6) },
-                data_operacao: { type: "TIMESTAMP", defaultValue: Sequelize.literal("CURRENT_TIMESTAMP") },
+                data_operacao: { type: Sequelize.DATE, defaultValue: Sequelize.literal("CURRENT_TIMESTAMP") },
                 valor_anterior: { type: Sequelize.STRING(10) },
                 valor_atual: { type: Sequelize.TEXT },
                 usuarios_id: { type: Sequelize.TEXT }

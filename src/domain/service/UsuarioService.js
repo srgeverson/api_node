@@ -316,6 +316,9 @@ class UsuarioService {
             });
         });
 
+        //Adicionando as permissões
+        //usuarioEncontrado.setPermissoes([7,8,9]);
+
         return await validarPermissoes.then(() => {
             return { id: usuario.id, permissoes: permissoesOk.concat(permissoesNaoOk) };
         }).catch(() => {
@@ -361,7 +364,7 @@ class UsuarioService {
         const expiresIn = parseInt(process.env.EXPIRES_IN);
         const chave = process.env.KEY_SECRET;
         const permissoes = permissoesUsuario.permissoes.map(permissao => permissao.ativo && permissao.nome);
-
+console.log("--------------------------------------------------------------------------------------------------");
         return await this.usuarioRepository
             .updateDataDeAcesso(usuario)
             .then(async () => {
@@ -380,7 +383,8 @@ class UsuarioService {
                     ),
                 }
             })
-            .catch(() => {
+            .catch((err) => {
+                console.log(err);
                 return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao gerer o token de acesso.');
             });
     }

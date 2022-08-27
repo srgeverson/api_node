@@ -23,13 +23,13 @@ module.exports = {
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
       },
       valor_anterior: {
-        type: Sequelize.STRING(10),
+        type: Sequelize.TEXT,
       },
       valor_atual: {
         type: Sequelize.TEXT,
       },
       usuarios_id: {
-        type: Sequelize.TEXT
+        type: Sequelize.INTEGER
       }
     })
   },

@@ -42,6 +42,10 @@ $ npm install dotenv --save
 ### Criando o arquivo que armazenará as variáveis necessárias para a aplicação executar.
 $ touch .ENV
 
+# Crie duas variáveis como mostra a seguir:
+$ SERVER_URL='URL da api em produção.'
+$ PORT='Porta da api em produção.'
+
 ### Trata as exceções de forma global.
 $ npm install express-async-handler --save
 
@@ -150,6 +154,7 @@ $ npm run development
 ### Gerando ducumentação swagger
 $ npm run swagger-autogen
 
+$ npx sequelize-cli init
 ### URL da documentação em desenvolvimento
 $ http://localhost:8080/api-docs
 

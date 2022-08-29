@@ -13,8 +13,6 @@ class Http {
     }
 
     middlewares() {
-        console.log('middlewares....');
-
         this.app.use(express.json());
 
         //Publicando fotos

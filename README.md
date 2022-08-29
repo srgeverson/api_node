@@ -15,6 +15,8 @@ Além disto é bom ter um editor para trabalhar com o código como [VSCode](http
 
 💡Os tokens gerados pode ser validado pelo [JWT.io](https://jwt.io/).
 
+💡O arquivo ".ENV" que aqui é orientado a ser criado é para ambiente de teste e utilização no docker, caso seja criado um ambiente manualmete crie as variáveis normalmente com os comando <b>export no linux</b> e <b>set para windows</b> com <b>terminal ou cmd</b> respectivamente.
+
 ## 🚀 Comandos executados durante o desenvolvimento.
 
 💡 Para Windows utilize o git bash, para linux utilize o terminal normalmente.

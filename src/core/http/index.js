@@ -3,7 +3,6 @@ import { routes } from '../../api/routes';
 import cors from 'cors';
 import path from 'path';
 import '../../domain/model';
-import { handleError } from '../helpers/error';
 
 class Http {
 
@@ -14,6 +13,8 @@ class Http {
     }
 
     middlewares() {
+        console.log('middlewares....');
+
         this.app.use(express.json());
 
         //Publicando fotos
@@ -28,14 +29,7 @@ class Http {
         }));
 
         //Configuração do CORS
-        this.app.use((err, req, res, next) => {
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Methods", 'GET, PUT, POST, DELETE');
-            res.header("Access-Control-Allow-Headers", 'X-PINGOTHER, Content-Type, Authorization');
-            this.app.use(cors());
-            handleError(err, res);
-            next();
-        })
+        this.app.use(cors());
     }
 
     routes() {

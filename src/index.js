@@ -1,7 +1,7 @@
 import Http from './core/http';
 
 const PORT = process.env.PORT || 8080;
-const PORT_HTTPS = process.env.PORT || 8081;
+const PORT_HTTPS = process.env.PORT_HTTPS || 8081;
 const HOST = process.env.SERVER_URL || 'localhost';
 
 const http = new Http();

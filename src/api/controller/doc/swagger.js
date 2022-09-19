@@ -140,7 +140,7 @@ const docs = {
     securityDefinitions: {
         Autorização: {
             type: 'oauth2',
-            tokenUrl: `https://${process.env.SERVER_URL || 'localhost'}:${process.env.PORT || 8080}/v1/usuarios/token`,
+            tokenUrl: `${process.env.PORT_HTTPS ? 'https' : 'http'}://${process.env.SERVER_URL ? process.env.SERVER_URL : 'localhost'}:${process.env.PORT_HTTPS ? process.env.PORT_HTTPS : process.env.PORT_HTTP ? process.env.PORT_HTTP : 8080}/v1/usuarios/token`,
             flow: 'password',
             scopes: {}
         }

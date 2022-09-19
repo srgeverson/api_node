@@ -175,6 +175,7 @@ $ npm run swagger-autogen
 $ npx sequelize-cli init
 ### URL da documentação em desenvolvimento
 $ http://localhost:8080/api-docs
+$ https://localhost:8081/api-docs
 
 ```
 

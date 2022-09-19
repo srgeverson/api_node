@@ -7,7 +7,7 @@ const docs = {
         description: 'Esta API servirá para gerenciar usuários.'
     },
     host: `${process.env.SERVER_URL || 'localhost'}:${process.env.PORT || 8080}`,
-    schemes: ['http'],
+    schemes: ['http', 'https'],
     tags: [
         {
             name: 'Autorização',
@@ -101,7 +101,7 @@ const docs = {
             { id: 1, mensagem: 'Permissão cadastrada.' },
             { id: 2, mensagem: 'Permissão já existe.' }
         ],
-        UsuarioFoto:{
+        UsuarioFoto: {
             id: 1,
             foto: '/C:/Users/user/Pictures/nome_imagem.PNG'
         },
@@ -140,7 +140,7 @@ const docs = {
     securityDefinitions: {
         Autorização: {
             type: 'oauth2',
-            tokenUrl: `http://${process.env.SERVER_URL || 'localhost'}:${process.env.PORT || 8080}/v1/usuarios/token`,
+            tokenUrl: `https://${process.env.SERVER_URL || 'localhost'}:${process.env.PORT || 8080}/v1/usuarios/token`,
             flow: 'password',
             scopes: {}
         }

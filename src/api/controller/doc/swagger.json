@@ -26,12 +26,13 @@
     }
   ],
   "schemes": [
-    "http"
+    "http",
+    "https"
   ],
   "securityDefinitions": {
     "Autorização": {
       "type": "oauth2",
-      "tokenUrl": "http://localhost:8080/v1/usuarios/token",
+      "tokenUrl": "https://localhost:8080/v1/usuarios/token",
       "flow": "password",
       "scopes": {}
     }

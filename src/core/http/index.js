@@ -1,7 +1,10 @@
 import express from 'express';
-import { routes } from '../../api/routes';
 import cors from 'cors';
 import path from 'path';
+import https from 'https';
+import http from 'http';
+import fs from 'fs';
+import { routes } from '../../api/routes';
 import '../../domain/model';
 
 class Http {
@@ -32,6 +35,20 @@ class Http {
 
     routes() {
         this.app.use(routes);
+    }
+
+    protocoloHttps() {
+        return https.createServer({
+            key: fs.readFileSync(`${__dirname}/../../../key_api_node.pem`),
+            cert: fs.readFileSync(`${__dirname}/../../../cert_api_node.pem`)
+        }, this.app);
+    }
+    
+    protocoloHttp() {
+        return http.createServer({
+            key: fs.readFileSync(`${__dirname}/../../../key_api_node.pem`),
+            cert: fs.readFileSync(`${__dirname}/../../../cert_api_node.pem`)
+        }, this.app);
     }
 }
 

@@ -132,6 +132,22 @@ $ CLIENT_ID='Nome de usuário para a autenticação da API.'
 $ CLIENT_SECRET='Senha de usuário para a autenticação da API.'
 
 ```
+#### 🛠️ Protocolo https
+```bash
+
+# 
+$ openssl genrsa -out key_api_node.pem
+
+# 
+$ openssl req -new -key key_api_node.pem -out csr_api_node.pem
+
+# 
+$ openssl x509 -req -days 9999 -in csr_api_node.pem -signkey key_api_node.pem -out cert_api_node.pem
+
+# 
+$ rm csr_api_node.pem
+
+```
 
 #### 🎲 Rodando a aplicação em ambiente para desenvolvimento
 

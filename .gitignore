@@ -106,3 +106,6 @@ dist
 
 # Arquivos de debug
 outDir
+
+#
+key_api_node.pem

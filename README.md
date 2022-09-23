@@ -1,4 +1,4 @@
-# # <a href="https://srgeverson.github.io/sgu_web">API Node JS - Gerenciamento de Usuários</a>
+# # <a href="https://mystore-app.ddns.net:8181/api-docs">API Node JS - Gerenciamento de Usuários</a>
 Este sistema servirá para gerenciar usuários.
 
 ## 📌 Versão 1.0.0

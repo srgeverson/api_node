@@ -368,7 +368,15 @@
           "Usuários"
         ],
         "description": "Lista de todos usuários cadastrados.",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Id do usuário.",
+            "type": "number",
+            "format": "int32",
+            "in": "query"
+          }
+        ],
         "responses": {
           "200": {
             "schema": {
@@ -413,8 +421,9 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string",
-            "description": "Id do usuário."
+            "type": "number",
+            "description": "Id do usuário.",
+            "format": "int32"
           }
         ],
         "responses": {
@@ -516,8 +525,9 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string",
-            "description": "Id do usuário."
+            "type": "number",
+            "description": "Id do usuário.",
+            "format": "int32"
           }
         ],
         "responses": {
@@ -561,8 +571,9 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string",
-            "description": "Id do usuário."
+            "type": "number",
+            "description": "Id do usuário.",
+            "format": "int32"
           }
         ],
         "responses": {
@@ -661,8 +672,9 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string",
-            "description": "Id do usuário."
+            "type": "number",
+            "description": "Id do usuário.",
+            "format": "int32"
           },
           {
             "name": "AlterarUsuario",
@@ -717,8 +729,65 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string",
-            "description": "Id do usuário."
+            "type": "number",
+            "description": "Id do usuário.",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/PermissoesUsuario"
+            },
+            "description": "Lista as permissões do usuário."
+          },
+          "401": {
+            "schema": {
+              "$ref": "#/definitions/Error401"
+            },
+            "description": "Não autorizado."
+          },
+          "403": {
+            "schema": {
+              "$ref": "#/definitions/Error403"
+            },
+            "description": "Sem premissão."
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/Error500"
+            },
+            "description": "Erro interno."
+          }
+        },
+        "security": [
+          {
+            "Autorização": []
+          }
+        ]
+      }
+    },
+    "/v1/usuarios/{id}/permissoes/{ativo}": {
+      "get": {
+        "tags": [
+          "UsuáriosPermissões"
+        ],
+        "description": "Lista de todas permissões ativada/desativada do usuário.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "number",
+            "description": "Id do usuário.",
+            "format": "int32"
+          },
+          {
+            "name": "ativo",
+            "in": "path",
+            "required": true,
+            "type": "boolean",
+            "description": "status do usuário."
           }
         ],
         "responses": {
@@ -765,13 +834,17 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "number",
+            "description": "Id do usuário.",
+            "format": "int32"
           },
           {
             "name": "idPermissao",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "number",
+            "description": "Id do usuário.",
+            "format": "int32"
           }
         ],
         "responses": {
@@ -815,13 +888,17 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "number",
+            "description": "Id do usuário.",
+            "format": "int32"
           },
           {
             "name": "idPermissao",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "number",
+            "description": "Id da permissão.",
+            "format": "int32"
           }
         ],
         "responses": {

@@ -285,6 +285,8 @@ routes.get(`/v1/usuarios`, resourceOwner, asyncHandler(async (request, response)
 
     // #swagger.security = [{'Autorização':[]}] 
 
+    // #swagger.parameters['id'] = { description: 'Id do usuário.', type: 'number', format: 'int32' }
+
     /** #swagger.responses[200] = {
         schema: { $ref: "#/definitions/Usuarios" },
         description: 'Lista de usuários.' 
@@ -317,7 +319,7 @@ routes.get(`/v1/usuarios/:id`,  resourceOwner, asyncHandler(async (request, resp
 
     // #swagger.security = [{'Autorização':[]}] 
 
-    //  #swagger.parameters['id'] = { description: 'Id do usuário.' }
+    // #swagger.parameters['id'] = { description: 'Id do usuário.', type: 'number', format: 'int32' }
 
     /** #swagger.responses[200] = {
         schema: { $ref: "#/definitions/Usuario" },
@@ -393,7 +395,7 @@ routes.put(`/v1/usuarios/ativa/:id`, resourceOwner, asyncHandler(async (request,
 
     // #swagger.security = [{'Autorização':[]}] 
 
-    // #swagger.parameters['id'] = { description: 'Id do usuário.' }
+    // #swagger.parameters['id'] = { description: 'Id do usuário.', type: 'number', format: 'int32' }
 
     // #swagger.responses[204] = { description: 'Usuário ativado.' } 
 
@@ -423,7 +425,7 @@ routes.put(`/v1/usuarios/desativa/:id`, resourceOwner, asyncHandler(async (reque
 
     // #swagger.security = [{'Autorização':[]}] 
 
-    // #swagger.parameters['id'] = { description: 'Id do usuário.' }
+    // #swagger.parameters['id'] = { description: 'Id do usuário.', type: 'number', format: 'int32' }
 
     // #swagger.responses[204] = { description: 'Usuário desativado.' } 
 
@@ -497,7 +499,8 @@ routes.put(`/v1/usuarios/id/:id`, resourceOwner, asyncHandler(async (request, re
 
     // #swagger.security = [{'Autorização':[]}] 
 
-    //  #swagger.parameters['id'] = { description: 'Id do usuário.' },
+    // #swagger.parameters['id'] = { description: 'Id do usuário.', type: 'number', format: 'int32' }
+
     /*  #swagger.parameters['AlterarUsuario'] = {
         in: 'body',
         description: 'Cadastrar usuário com senha.',
@@ -540,7 +543,7 @@ routes.get(`/v1/usuarios/:id/permissoes`, resourceOwner, asyncHandler(async (req
 
     // #swagger.security = [{'Autorização':[]}] 
 
-    // #swagger.parameters['id'] = { description: 'Id do usuário.' }
+    // #swagger.parameters['id'] = { description: 'Id do usuário.', type: 'number', format: 'int32' }
 
     /** #swagger.responses[200] = {
         schema: { $ref: "#/definitions/PermissoesUsuario" },
@@ -568,13 +571,16 @@ routes.get(`/v1/usuarios/:id/permissoes`, resourceOwner, asyncHandler(async (req
      console.log('todasPermissoesDoUsuario');
     return await usuarioController.todasPermissoesDoUsuario(request, response);
 }));
+
 routes.get(`/v1/usuarios/:id/permissoes/:ativo`, resourceOwner, asyncHandler(async (request, response) => {
     // #swagger.tags = ['UsuáriosPermissões']
-    // #swagger.description = 'Lista de todas permissões do usuário.'
+    // #swagger.description = 'Lista de todas permissões ativada/desativada do usuário.'
 
     // #swagger.security = [{'Autorização':[]}] 
 
-    // #swagger.parameters['id'] = { description: 'Id do usuário.' }
+    // #swagger.parameters['id'] = { description: 'Id do usuário.', type: 'number', format: 'int32' }
+    
+    // #swagger.parameters['ativo'] = { description: 'status do usuário.',  type: 'boolean'  }
 
     /** #swagger.responses[200] = {
         schema: { $ref: "#/definitions/PermissoesUsuario" },
@@ -609,6 +615,9 @@ routes.put(`/v1/usuarios/:id/permissoes/:idPermissao/adicionar`,  resourceOwner,
 
     // #swagger.security = [{'Autorização':[]}] 
 
+    // #swagger.parameters['id'] = { description: 'Id do usuário.', type: 'number', format: 'int32' }
+    // #swagger.parameters['idPermissao'] = { description: 'Id do usuário.', type: 'number', format: 'int32' }
+
     // #swagger.responses[204] = { description: 'Permissão cadastrada/ativada com sucesso.' } 
 
     /** #swagger.responses[401] = {
@@ -638,6 +647,9 @@ routes.delete(`/v1/usuarios/:id/permissoes/:idPermissao/remover`,  resourceOwner
 
     // #swagger.security = [{'Autorização':[]}] 
 
+    // #swagger.parameters['id'] = { description: 'Id do usuário.', type: 'number', format: 'int32' }
+    // #swagger.parameters['idPermissao'] = { description: 'Id da permissão.', type: 'number', format: 'int32' }
+    
     // #swagger.responses[204] = { description: 'Permissão removida/desativada com sucesso.' } 
 
     /** #swagger.responses[401] = {

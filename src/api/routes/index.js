@@ -565,8 +565,42 @@ routes.get(`/v1/usuarios/:id/permissoes`, resourceOwner, asyncHandler(async (req
         description: 'Erro interno.' 
      }
      */
-
+     console.log('todasPermissoesDoUsuario');
     return await usuarioController.todasPermissoesDoUsuario(request, response);
+}));
+routes.get(`/v1/usuarios/:id/permissoes/:ativo`, resourceOwner, asyncHandler(async (request, response) => {
+    // #swagger.tags = ['UsuáriosPermissões']
+    // #swagger.description = 'Lista de todas permissões do usuário.'
+
+    // #swagger.security = [{'Autorização':[]}] 
+
+    // #swagger.parameters['id'] = { description: 'Id do usuário.' }
+
+    /** #swagger.responses[200] = {
+        schema: { $ref: "#/definitions/PermissoesUsuario" },
+        description: 'Lista as permissões do usuário.' 
+     } 
+    */
+
+    /** #swagger.responses[401] = {
+        schema: { $ref: "#/definitions/Error401" },
+        description: 'Não autorizado.' 
+     } 
+    */
+
+    /** #swagger.responses[403] = {
+        schema: { $ref: "#/definitions/Error403" },
+        description: 'Sem premissão.' 
+     } 
+    */
+
+    /** #swagger.responses[500] = {
+        schema: { $ref: "#/definitions/Error500" },
+        description: 'Erro interno.' 
+     }
+     */
+console.log('todasPermissoesDoUsuarioPorAtivo');
+    return await usuarioController.todasPermissoesDoUsuarioPorAtivo(request, response);
 }));
 
 routes.put(`/v1/usuarios/:id/permissoes/:idPermissao/adicionar`,  resourceOwner, asyncHandler(async (request, response) => {

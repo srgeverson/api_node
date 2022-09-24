@@ -153,6 +153,15 @@ class UsuarioController {
         else
             return response.status(StatusCode.SuccessOK).json(permissoesDoUsuario);
     }
+    
+    async todasPermissoesDoUsuarioPorAtivo(request, response) {
+        const { id, ativo } = request.params;
+        const permissoesDoUsuario = await this.usuarioService.todasPermissoesDoUsuarioPorAtivo({ id, ativo });
+        if (permissoesDoUsuario.statusCode)
+            return response.status(permissoesDoUsuario.statusCode).json(permissoesDoUsuario);
+        else
+            return response.status(StatusCode.SuccessOK).json(permissoesDoUsuario);
+    }
 
     async todosUsuarios(request, response) {
         const usuarios = await this.usuarioService.buscarTodos();

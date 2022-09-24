@@ -569,23 +569,13 @@ routes.get(`/v1/usuarios/:id/permissoes`, resourceOwner, asyncHandler(async (req
     return await usuarioController.todasPermissoesDoUsuario(request, response);
 }));
 
-routes.post(`/v1/usuarios/:id/permissoes`,  resourceOwner, asyncHandler(async (request, response) => {
+routes.put(`/v1/usuarios/:id/permissoes/:idPermissao/adicionar`,  resourceOwner, asyncHandler(async (request, response) => {
     // #swagger.tags = ['UsuáriosPermissões']
-    // #swagger.description = 'Cadastar várias permissões ao usuário.'
+    // #swagger.description = 'Cadastar permissão ao usuário.'
 
     // #swagger.security = [{'Autorização':[]}] 
 
-    /*  #swagger.parameters['CadastrarPermissoes'] = {
-        in: 'body',
-        description: 'Lista de permissões a ser cadastrada para o usuário.',
-        schema: { $ref: '#/definitions/CadastrarPermissoes' }
-    } */
-
-    /** #swagger.responses[200] = {
-        schema: { $ref: "#/definitions/PermissoesCadastradas" },
-        description: 'Lista de permissões cadastrada para o usuário.' 
-     } 
-    */
+    // #swagger.responses[204] = { description: 'Permissão cadastrada/ativada com sucesso.' } 
 
     /** #swagger.responses[401] = {
         schema: { $ref: "#/definitions/Error401" },
@@ -605,9 +595,37 @@ routes.post(`/v1/usuarios/:id/permissoes`,  resourceOwner, asyncHandler(async (r
      }
      */
 
-    return await usuarioController.incluirPermissoesAoUsuario(request, response);
+    return await usuarioController.incluirPermissaoAoUsuario(request, response);
 }));
 
+routes.delete(`/v1/usuarios/:id/permissoes/:idPermissao/remover`,  resourceOwner, asyncHandler(async (request, response) => {
+    // #swagger.tags = ['UsuáriosPermissões']
+    // #swagger.description = 'Cadastar permissão ao usuário.'
+
+    // #swagger.security = [{'Autorização':[]}] 
+
+    // #swagger.responses[204] = { description: 'Permissão removida/desativada com sucesso.' } 
+
+    /** #swagger.responses[401] = {
+        schema: { $ref: "#/definitions/Error401" },
+        description: 'Não autorizado.' 
+     } 
+    */
+
+    /** #swagger.responses[403] = {
+        schema: { $ref: "#/definitions/Error403" },
+        description: 'Sem premissão.' 
+     } 
+    */
+
+    /** #swagger.responses[500] = {
+        schema: { $ref: "#/definitions/Error500" },
+        description: 'Erro interno.' 
+     }
+     */
+
+    return await usuarioController.removerPermissaoDoUsuario(request, response);
+}));
 
 //#endregion Controla as permissões do usuário
 

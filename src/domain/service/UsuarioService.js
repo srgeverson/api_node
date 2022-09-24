@@ -7,12 +7,14 @@ import UsuarioRepository from '../repository/UsuarioRepository';
 import { enviarEmail } from '../../core/mail';
 import { validateEmail } from '../../core/helpers/utils';
 import PermissaoService from '../service/PermissaoService';
+import UsuarioPermissaoService from '../service/UsuarioPermissaoService';
 
 class UsuarioService {
 
     constructor() {
         this.usuarioRepository = new UsuarioRepository();
         this.permissaoService = new PermissaoService();
+        this.usuarioPermissaoService = new UsuarioPermissaoService();
     }
 
     async alterarUsuario(usuario) {
@@ -62,7 +64,7 @@ class UsuarioService {
     async alterarFotoUsuario(usuario) {
 
         if (!usuario.foto)
-        return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Foto inválida ou não informada.');
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Foto inválida ou não informada.');
 
         const id = usuario.id;
         console.log(usuario);
@@ -88,7 +90,7 @@ class UsuarioService {
                 return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao alterar usuário o senha.');
             });
     }
-    
+
     async buscarPorEmail(email) {
         if (!email)
             return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'E-mail de usuário não informado.');
@@ -268,6 +270,33 @@ class UsuarioService {
             });
     }
 
+    async incluirPermissaoAoUsuario(usuario) {
+        const usuarioEncontrado = await this.buscarPorId(usuario.id);
+
+        if (usuarioEncontrado.statusCode)
+            return usuarioEncontrado;
+
+        if (!usuarioEncontrado.ativo)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Usuário informado não está ativo.');
+
+        const permissao = await this.permissaoService.buscarPorId(usuario.idPermissao);
+        if (permissao.statusCode)
+            return permissao;
+
+        const permissaoParaCadastro = { usuarioId: usuario.id, permissaoId: usuario.idPermissao };
+        const usuariosPermissoes = await this.usuarioPermissaoService
+            .buscarPorIdDeUsuarioEPermissao(permissaoParaCadastro);
+        if (usuariosPermissoes) {
+            console.log('isEquivalent')
+            if (usuariosPermissoes.ativo === true)
+                return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Usuário já possui a permissão e a mesma está ativa.');
+            else {
+                return this.usuarioPermissaoService.ativarOuDesativarPermissaoDoUsuario({ ...permissaoParaCadastro, ativo: true });
+            }
+        } else 
+            return this.usuarioPermissaoService.salvarUsuarioEPermissao({ usuarioId: usuarioEncontrado.id, permissaoId: usuario.idPermissao });
+    }
+
     async incluirPermissoesAoUsuario(usuario) {
 
         const usuarioEncontrado = await this.buscarPorId(usuario.id);
@@ -288,7 +317,7 @@ class UsuarioService {
                         const { permissoes } = permissaoEncontrada;
                         if (permissoes) {
                             console.log(permissoes[0].ativo)
-                            if (!permissoes[0].ativo)
+                            if (permissoes[0].ativo === false)
                                 permissoesNaoOk.push({ id: value, mensagem: 'Usuário já possui esta permissão, porém a mesma não está ativa.' });
                             else if (!permissoes[0].usuarios_permissoes.ativo)
                                 permissoesNaoOk.push({ id: value, mensagem: 'Usuário já possui esta permissão, porém a mesma está desativada para este usuário.' });
@@ -325,7 +354,33 @@ class UsuarioService {
             return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Falha durante o processo de validação de permissão.');
         });
     }
-    
+
+    async removerPermissaoDoUsuario(usuario) {
+        const usuarioEncontrado = await this.buscarPorId(usuario.id);
+        if (usuarioEncontrado.statusCode)
+            return usuarioEncontrado;
+
+        if (!usuarioEncontrado.ativo)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Usuário informado não está ativo.');
+
+        const permissao = await this.permissaoService.buscarPorId(usuario.idPermissao);
+        if (permissao.statusCode)
+            return permissao;
+
+        const permissaoParaCadastro = { usuarioId: usuario.id, permissaoId: usuario.idPermissao };
+
+        const usuariosPermissoes = await this.usuarioPermissaoService.buscarPorIdDeUsuarioEPermissao(permissaoParaCadastro);
+        if (usuariosPermissoes) {
+            if (usuariosPermissoes.ativo === true)
+                return this.usuarioPermissaoService.ativarOuDesativarPermissaoDoUsuario({ ...permissaoParaCadastro, ativo: false });
+            else {
+                return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'A permissão informada já encontra-se desativada.');
+            }
+        } else {
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'A permissão informada não foi encontrada para o usuário informado.');
+        }
+    }
+
     async todasPermissoesDoUsuario(usuario) {
 
         const usuarioEncontrado = await this.buscarPorId(usuario.id);
@@ -364,7 +419,7 @@ class UsuarioService {
         const expiresIn = parseInt(process.env.EXPIRES_IN);
         const chave = process.env.KEY_SECRET;
         const permissoes = permissoesUsuario.permissoes.map(permissao => permissao.ativo && permissao.nome);
-console.log("--------------------------------------------------------------------------------------------------");
+        console.log("--------------------------------------------------------------------------------------------------");
         return await this.usuarioRepository
             .updateDataDeAcesso(usuario)
             .then(async () => {

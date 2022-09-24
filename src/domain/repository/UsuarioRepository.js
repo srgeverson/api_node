@@ -5,10 +5,20 @@ const moment = require('moment-timezone');
 
 class UsuarioRepository {
 
+    /** 
+     * @deprecated Adicionar a permissão está sendo realizado pela classe UsuarioPermissaoRepository
+     */
+    async adicionarPermissaoAoUsuario(usuario) {
+        const { usuarioId, permissaoId } = usuario;
+        const usuarioParaNovaPermissao = await this.findById(usuarioId);
+        const permissaoNova = await Permissao.findOne({ where: { id: permissaoId } });
+        return await usuarioParaNovaPermissao.addPermissoes(permissaoNova);
+    }
+
     async deleteByEmail(usuario) {
         return await Usuario.destroy({ where: { email: usuario.email } });
     }
-    
+
     async deleteById(usuario) {
         return await Usuario.destroy({ where: { id: usuario.id } });
     }
@@ -34,24 +44,22 @@ class UsuarioRepository {
             }
         });
     }
-    
+
+    /** 
+     * @deprecated Este método foi depreciado, pois houve nececidade de obter mais parâmetros da Classe UsuarioPermissao
+     */
     async findPermissaoByUsuario(usuario) {
+        const { id, permissaoId } = usuario;
         return await Usuario.findOne({
             attributes: [],
             include: [{
                 model: Permissao,
                 as: 'permissoes',
                 attributes: ['id', 'nome', 'descricao', 'ativo'],
-                through: {
-                    attributes: ['id','ativo']
-                },
-                where: {
-                    id: usuario.permissaoId
-                }
+                through: { attributes: ['id', 'ativo'] },
+                where: { id: permissaoId }
             }],
-            where: {
-                id: usuario.id
-            },
+            where: { id }
         });
     }
 

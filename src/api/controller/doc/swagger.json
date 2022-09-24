@@ -752,12 +752,14 @@
             "Autorização": []
           }
         ]
-      },
-      "post": {
+      }
+    },
+    "/v1/usuarios/{id}/permissoes/{idPermissao}/adicionar": {
+      "put": {
         "tags": [
           "UsuáriosPermissões"
         ],
-        "description": "Cadastar várias permissões ao usuário.",
+        "description": "Cadastar permissão ao usuário.",
         "parameters": [
           {
             "name": "id",
@@ -766,20 +768,65 @@
             "type": "string"
           },
           {
-            "name": "CadastrarPermissoes",
-            "in": "body",
-            "description": "Lista de permissões a ser cadastrada para o usuário.",
-            "schema": {
-              "$ref": "#/definitions/CadastrarPermissoes"
-            }
+            "name": "idPermissao",
+            "in": "path",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
-          "200": {
+          "204": {
+            "description": "Permissão cadastrada/ativada com sucesso."
+          },
+          "401": {
             "schema": {
-              "$ref": "#/definitions/PermissoesCadastradas"
+              "$ref": "#/definitions/Error401"
             },
-            "description": "Lista de permissões cadastrada para o usuário."
+            "description": "Não autorizado."
+          },
+          "403": {
+            "schema": {
+              "$ref": "#/definitions/Error403"
+            },
+            "description": "Sem premissão."
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/Error500"
+            },
+            "description": "Erro interno."
+          }
+        },
+        "security": [
+          {
+            "Autorização": []
+          }
+        ]
+      }
+    },
+    "/v1/usuarios/{id}/permissoes/{idPermissao}/remover": {
+      "delete": {
+        "tags": [
+          "UsuáriosPermissões"
+        ],
+        "description": "Cadastar permissão ao usuário.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "idPermissao",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Permissão removida/desativada com sucesso."
           },
           "401": {
             "schema": {

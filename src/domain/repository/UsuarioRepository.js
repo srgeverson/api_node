@@ -80,6 +80,23 @@ class UsuarioRepository {
         });
     }
 
+    async findPermissoesByEmailAndAtivo(usuario) {
+        const { email, ativo } = usuario;
+        return await Usuario.findOne({
+            attributes: [],
+            include: [{
+                model: Permissao,
+                as: 'permissoes',
+                attributes: ['nome', 'ativo'],
+                through: {
+                    attributes: [],
+                    where: { ativo: ativo === true ? true : false }
+                }
+            }],
+            where: { email }
+        });
+    }
+
     async findPermissoesByUsuario(usuario) {
         return await Usuario.findAll({
             attributes: ['id', 'nome', 'email'],
@@ -94,6 +111,23 @@ class UsuarioRepository {
             where: {
                 id: usuario.id
             },
+        });
+    }
+
+    async findPermissoesByUsuarioAndAtivo(usuario) {
+        const { id, ativo } = usuario;
+        return await Usuario.findAll({
+            attributes: ['id', 'nome', 'email'],
+            include: [{
+                model: Permissao,
+                as: 'permissoes',
+                attributes: ['id', 'nome', 'descricao'],
+                through: {
+                    attributes: [],
+                    where: { ativo: ativo === true ? true : false }
+                }
+            }],
+            where: { id }
         });
     }
 

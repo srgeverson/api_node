@@ -8,6 +8,7 @@ import { enviarEmail } from '../../core/mail';
 import { validateEmail } from '../../core/helpers/utils';
 import PermissaoService from '../service/PermissaoService';
 import UsuarioPermissaoService from '../service/UsuarioPermissaoService';
+import { toBoolean } from '../../core/utils';
 
 class UsuarioService {
 
@@ -293,7 +294,7 @@ class UsuarioService {
             else {
                 return this.usuarioPermissaoService.ativarOuDesativarPermissaoDoUsuario({ ...permissaoParaCadastro, ativo: true });
             }
-        } else 
+        } else
             return this.usuarioPermissaoService.salvarUsuarioEPermissao({ usuarioId: usuarioEncontrado.id, permissaoId: usuario.idPermissao });
     }
 
@@ -398,28 +399,46 @@ class UsuarioService {
             });
     }
 
+    async todasPermissoesDoUsuarioPorAtivo(usuario) {
+        const { id, ativo } = usuario;
+        const usuarioEncontrado = await this.buscarPorId(id);
+
+        if (usuarioEncontrado.statusCode)
+            return usuarioEncontrado;
+
+        return await this.usuarioRepository
+            .findPermissoesByUsuarioAndAtivo({ id, ativo: toBoolean(ativo) })
+            .then(async permissoesDoUsuario => {
+                return permissoesDoUsuario;
+            })
+            .catch(() => {
+                return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao pesquisar as permissões do usuário.');
+            });
+    }
+
     async validarAcesso(usuario) {
-        if (!usuario.email)
+        const {email, senha} = usuario;
+        if (!email)
             return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'E-mail de usuário não informado.');
 
-        if (!usuario.senha)
+        if (!senha)
             return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Senha de usuário não informado.');
 
-        const usuarioExistente = await this.buscarPorEmail(usuario.email);
+        const usuarioExistente = await this.buscarPorEmail(email);
         if (!usuarioExistente)
             return new ErrorHandler(StatusCode.ClientErrorUnauthorized, 'E-mail inválido ou usuário não existe.');
 
-        if (!usuarioExistente.senha)
+        if (!senha)
             return new ErrorHandler(StatusCode.ClientErrorUnauthorized, 'Usuário não possui senha cadastrada.');
 
-        if (!await bcrypt.compare(usuario.senha, usuarioExistente.senha))
+        if (!await bcrypt.compare(senha, usuarioExistente.senha))
             return new ErrorHandler(StatusCode.ClientErrorUnauthorized, 'Senha inválida.');
 
-        const permissoesUsuario = await this.usuarioRepository.findPermissoesByEmail(usuario);
+        const permissoesUsuario = await this.usuarioRepository.findPermissoesByEmailAndAtivo({email, ativo:true});
         const expiresIn = parseInt(process.env.EXPIRES_IN);
         const chave = process.env.KEY_SECRET;
-        const permissoes = permissoesUsuario.permissoes.map(permissao => permissao.ativo && permissao.nome);
-        console.log("--------------------------------------------------------------------------------------------------");
+        const permissoes = permissoesUsuario.permissoes.map(permissao => permissao.nome);
+        console.log(permissoes);
         return await this.usuarioRepository
             .updateDataDeAcesso(usuario)
             .then(async () => {
@@ -438,8 +457,7 @@ class UsuarioService {
                     ),
                 }
             })
-            .catch((err) => {
-                console.log(err);
+            .catch(() => {
                 return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao gerer o token de acesso.');
             });
     }

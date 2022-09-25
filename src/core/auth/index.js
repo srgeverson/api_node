@@ -30,6 +30,18 @@ const resourceOwner = async (request, response, next) => {
     }
 }
 
+const validateToken = async (token) => {
+    try {
+        const chave = process.env.KEY_SECRET;
+        return await promisify(jwt.verify)(token, chave);
+    } catch (err) {
+        return response.status(StatusCode.ClientErrorUnauthorized).json({
+            statusCode: StatusCode.ClientErrorUnauthorized,
+            message: 'Token inválido!'
+        });
+    }
+}
+
 const client = async (request, response, next) => {
     try {
         const client_id = process.env.CLIENT_ID;
@@ -66,4 +78,4 @@ const client = async (request, response, next) => {
     }
 }
 
-export { resourceOwner, client };
+export { resourceOwner, client,validateToken };

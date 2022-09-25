@@ -1,4 +1,5 @@
 import { StatusCode } from 'status-code-enum';
+import { validateToken } from '../../core/auth';
 import UsuarioService from '../../domain/service/UsuarioService';
 
 class UsuarioController {
@@ -113,13 +114,17 @@ class UsuarioController {
 
     async login(request, response) {
         let usuarioAutorizado = null;
-        const { grant_type, username, password, email, senha } = request.body;
+        const { grant_type, username, password, email, senha, refresh_token } = request.body;
         switch (grant_type) {
             case 'password':
                 usuarioAutorizado = await this.usuarioService.validarAcesso({ email: username, senha: password });
                 break;
+            case 'refresh_token':
+                const refreshToken = await validateToken(refresh_token);
+                usuarioAutorizado = await this.usuarioService.revalidarAcesso({ email: refreshToken.email });
+                break;
             default:
-                usuarioAutorizado = await this.usuarioService.validarAcesso({email, senha});
+                usuarioAutorizado = await this.usuarioService.validarAcesso({ email, senha });
                 break
         }
         if (usuarioAutorizado.statusCode)

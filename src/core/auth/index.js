@@ -8,8 +8,6 @@ const resourceOwner = async (request, response, next) => {
 
         const authorizationHeader = request.headers.authorization;
 
-        console.log(authorizationHeader);
-
         if (!authorizationHeader)
             return response.status(StatusCode.ClientErrorUnauthorized).json({
                 statusCode: StatusCode.ClientErrorUnauthorized,

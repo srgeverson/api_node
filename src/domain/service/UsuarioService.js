@@ -361,35 +361,6 @@ class UsuarioService {
         });
     }
 
-<<<<<<< HEAD
-=======
-    async removerPermissaoDoUsuario(usuario) {
-        const usuarioEncontrado = await this.buscarPorId(usuario.id);
-        if (usuarioEncontrado.statusCode)
-            return usuarioEncontrado;
-
-        if (!usuarioEncontrado.ativo)
-            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Usuário informado não está ativo.');
-
-        const permissao = await this.permissaoService.buscarPorId(usuario.idPermissao);
-        if (permissao.statusCode)
-            return permissao;
-
-        const permissaoParaCadastro = { usuarioId: usuario.id, permissaoId: usuario.idPermissao };
-
-        const usuariosPermissoes = await this.usuarioPermissaoService.buscarPorIdDeUsuarioEPermissao(permissaoParaCadastro);
-        if (usuariosPermissoes) {
-            if (usuariosPermissoes.ativo === true)
-                return this.usuarioPermissaoService.ativarOuDesativarPermissaoDoUsuario({ ...permissaoParaCadastro, ativo: false });
-            else {
-                return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'A permissão informada já encontra-se desativada.');
-            }
-        } else {
-            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'A permissão informada não foi encontrada para o usuário informado.');
-        }
-    }
-
->>>>>>> origin/develop
     async todasPermissoesDoUsuario(usuario) {
 
         const usuarioEncontrado = await this.buscarPorId(usuario.id);
@@ -422,6 +393,32 @@ class UsuarioService {
             .catch(() => {
                 return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao pesquisar as permissões do usuário.');
             });
+    }
+    
+    async removerPermissaoDoUsuario(usuario) {
+        const usuarioEncontrado = await this.buscarPorId(usuario.id);
+        if (usuarioEncontrado.statusCode)
+            return usuarioEncontrado;
+
+        if (!usuarioEncontrado.ativo)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Usuário informado não está ativo.');
+
+        const permissao = await this.permissaoService.buscarPorId(usuario.idPermissao);
+        if (permissao.statusCode)
+            return permissao;
+
+        const permissaoParaCadastro = { usuarioId: usuario.id, permissaoId: usuario.idPermissao };
+
+        const usuariosPermissoes = await this.usuarioPermissaoService.buscarPorIdDeUsuarioEPermissao(permissaoParaCadastro);
+        if (usuariosPermissoes) {
+            if (usuariosPermissoes.ativo === true)
+                return this.usuarioPermissaoService.ativarOuDesativarPermissaoDoUsuario({ ...permissaoParaCadastro, ativo: false });
+            else {
+                return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'A permissão informada já encontra-se desativada.');
+            }
+        } else {
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'A permissão informada não foi encontrada para o usuário informado.');
+        }
     }
 
     async revalidarAcesso(usuario) {

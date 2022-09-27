@@ -24,13 +24,18 @@ class UsuarioController {
     }
 
     async alterarFotoUsuario(request, response) {
-        const { id } = request.body;
-        const foto = request.file;
-        const usuarioFotoAlterada = await this.usuarioService.alterarFotoUsuario({ id, foto });
-        if (usuarioFotoAlterada.statusCode)
-            return response.status(usuarioFotoAlterada.statusCode).json(usuarioFotoAlterada);
-        else
-            return response.status(StatusCode.SuccessOK).json(usuarioFotoAlterada);
+        const permissoesValidadas = await validateRoles(['proprio_usuario'], request.usuarioAutenticadoRoles);
+        if (permissoesValidadas && permissoesValidadas.statusCode)
+            return response.status(permissoesValidadas.statusCode).json(permissoesValidadas);
+        else {
+            const { id } = request.body;
+            const foto = request.file;
+            const usuarioFotoAlterada = await this.usuarioService.alterarFotoUsuario({ id, foto });
+            if (usuarioFotoAlterada.statusCode)
+                return response.status(usuarioFotoAlterada.statusCode).json(usuarioFotoAlterada);
+            else
+                return response.status(StatusCode.SuccessOK).json(usuarioFotoAlterada);
+        }
     }
 
     async ativarUsuario(request, response) {
@@ -131,12 +136,17 @@ class UsuarioController {
     }
 
     async incluirPermissaoAoUsuario(request, response) {
-        const { id, idPermissao } = request.params;
-        const permissaoVinculada = await this.usuarioService.incluirPermissaoAoUsuario({ id, idPermissao });
-        if (permissaoVinculada.statusCode)
-            return response.status(permissaoVinculada.statusCode).json(permissaoVinculada);
-        else
-            return response.status(StatusCode.SuccessNoContent).json(permissaoVinculada);
+        const permissoesValidadas = await validateRoles(['editar_usuario'], request.usuarioAutenticadoRoles);
+        if (permissoesValidadas && permissoesValidadas.statusCode)
+            return response.status(permissoesValidadas.statusCode).json(permissoesValidadas);
+        else {
+            const { id, idPermissao } = request.params;
+            const permissaoVinculada = await this.usuarioService.incluirPermissaoAoUsuario({ id, idPermissao });
+            if (permissaoVinculada.statusCode)
+                return response.status(permissaoVinculada.statusCode).json(permissaoVinculada);
+            else
+                return response.status(StatusCode.SuccessNoContent).json(permissaoVinculada);
+        }
     }
 
     async incluirPermissoesAoUsuario(request, response) {
@@ -179,14 +189,29 @@ class UsuarioController {
             return response.status(StatusCode.SuccessOK).json(usuarioAutorizado);
     }
 
+    async perfil(request, response) {
+        const permissoesValidadas = await validateRoles(['proprio_usuario'], request.usuarioAutenticadoRoles);
+        if (permissoesValidadas && permissoesValidadas.statusCode)
+            return response.status(permissoesValidadas.statusCode).json(permissoesValidadas);
+        else {
+            //const { id } = request.usuarioAutenticadoId;
+            return response.status(StatusCode.ClientErrorLocked).json({ statusCode: StatusCode.ClientErrorLocked, message: "O recurso sendo acessado está travado." });
+        }
+    }
+
     async removerPermissaoDoUsuario(request, response) {
-        const { id, idPermissao } = request.params;
-        const permissaoVinculada = await this.usuarioService.removerPermissaoDoUsuario({ id, idPermissao });
-        if (permissaoVinculada.statusCode)
-            return response.status(permissaoVinculada.statusCode).json(permissaoVinculada);
-        else
-            return response.status(StatusCode.SuccessNoContent).json(permissaoVinculada);
-    } 
+        const permissoesValidadas = await validateRoles(['excluir_usuario'], request.usuarioAutenticadoRoles);
+        if (permissoesValidadas && permissoesValidadas.statusCode)
+            return response.status(permissoesValidadas.statusCode).json(permissoesValidadas);
+        else {
+            const { id, idPermissao } = request.params;
+            const permissaoVinculada = await this.usuarioService.removerPermissaoDoUsuario({ id, idPermissao });
+            if (permissaoVinculada.statusCode)
+                return response.status(permissaoVinculada.statusCode).json(permissaoVinculada);
+            else
+                return response.status(StatusCode.SuccessNoContent).json(permissaoVinculada);
+        }
+    }
 
     async todasPermissoesDoUsuario(request, response) {
         const permissoesValidadas = await validateRoles(['listar_usuario'], request.usuarioAutenticadoRoles);
@@ -201,14 +226,19 @@ class UsuarioController {
                 return response.status(StatusCode.SuccessOK).json(permissoesDoUsuario);
         }
     }
-    
+
     async todasPermissoesDoUsuarioPorAtivo(request, response) {
-        const { id, ativo } = request.params;
-        const permissoesDoUsuario = await this.usuarioService.todasPermissoesDoUsuarioPorAtivo({ id, ativo });
-        if (permissoesDoUsuario.statusCode)
-            return response.status(permissoesDoUsuario.statusCode).json(permissoesDoUsuario);
-        else
-            return response.status(StatusCode.SuccessOK).json(permissoesDoUsuario);
+        const permissoesValidadas = await validateRoles(['listar_usuario'], request.usuarioAutenticadoRoles);
+        if (permissoesValidadas && permissoesValidadas.statusCode)
+            return response.status(permissoesValidadas.statusCode).json(permissoesValidadas);
+        else {
+            const { id, ativo } = request.params;
+            const permissoesDoUsuario = await this.usuarioService.todasPermissoesDoUsuarioPorAtivo({ id, ativo });
+            if (permissoesDoUsuario.statusCode)
+                return response.status(permissoesDoUsuario.statusCode).json(permissoesDoUsuario);
+            else
+                return response.status(StatusCode.SuccessOK).json(permissoesDoUsuario);
+        }
     }
 
     async todosUsuarios(request, response) {

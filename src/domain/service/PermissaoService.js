@@ -9,12 +9,11 @@ class PermissaoService {
     }
 
     async ativarOuDesativarPermissao(permissao) {
-
         const permissaoEncontrada = await this.buscarPorId(permissao.id);
 
         if (permissaoEncontrada.statusCode)
             return permissaoEncontrada;
-
+            
         if (permissao.ativo === permissaoEncontrada.ativo)
             return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Permissão já encontra-se ativado/desativado.');
 
@@ -45,7 +44,6 @@ class PermissaoService {
             return {
                 id: permissao.id,
                 nome: permissao.nome,
-                email: permissao.email,
                 ativo: permissao.ativo
             }
         else

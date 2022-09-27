@@ -361,32 +361,6 @@ class UsuarioService {
         });
     }
 
-    async removerPermissaoDoUsuario(usuario) {
-        const usuarioEncontrado = await this.buscarPorId(usuario.id);
-        if (usuarioEncontrado.statusCode)
-            return usuarioEncontrado;
-
-        if (!usuarioEncontrado.ativo)
-            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Usuário informado não está ativo.');
-
-        const permissao = await this.permissaoService.buscarPorId(usuario.idPermissao);
-        if (permissao.statusCode)
-            return permissao;
-
-        const permissaoParaCadastro = { usuarioId: usuario.id, permissaoId: usuario.idPermissao };
-
-        const usuariosPermissoes = await this.usuarioPermissaoService.buscarPorIdDeUsuarioEPermissao(permissaoParaCadastro);
-        if (usuariosPermissoes) {
-            if (usuariosPermissoes.ativo === true)
-                return this.usuarioPermissaoService.ativarOuDesativarPermissaoDoUsuario({ ...permissaoParaCadastro, ativo: false });
-            else {
-                return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'A permissão informada já encontra-se desativada.');
-            }
-        } else {
-            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'A permissão informada não foi encontrada para o usuário informado.');
-        }
-    }
-
     async todasPermissoesDoUsuario(usuario) {
 
         const usuarioEncontrado = await this.buscarPorId(usuario.id);
@@ -418,6 +392,85 @@ class UsuarioService {
             })
             .catch(() => {
                 return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao pesquisar as permissões do usuário.');
+            });
+    }
+    
+    async removerPermissaoDoUsuario(usuario) {
+        const usuarioEncontrado = await this.buscarPorId(usuario.id);
+        if (usuarioEncontrado.statusCode)
+            return usuarioEncontrado;
+
+        if (!usuarioEncontrado.ativo)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Usuário informado não está ativo.');
+
+        const permissao = await this.permissaoService.buscarPorId(usuario.idPermissao);
+        if (permissao.statusCode)
+            return permissao;
+
+        const permissaoParaCadastro = { usuarioId: usuario.id, permissaoId: usuario.idPermissao };
+
+        const usuariosPermissoes = await this.usuarioPermissaoService.buscarPorIdDeUsuarioEPermissao(permissaoParaCadastro);
+        if (usuariosPermissoes) {
+            if (usuariosPermissoes.ativo === true)
+                return this.usuarioPermissaoService.ativarOuDesativarPermissaoDoUsuario({ ...permissaoParaCadastro, ativo: false });
+            else {
+                return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'A permissão informada já encontra-se desativada.');
+            }
+        } else {
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'A permissão informada não foi encontrada para o usuário informado.');
+        }
+    }
+
+    async revalidarAcesso(usuario) {
+        // if (!usuario.email)
+        //     return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'E-mail de usuário não informado.');
+
+        // if (!usuario.senha)
+        //     return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Senha de usuário não informado.');
+
+        const usuarioExistente = await this.buscarPorEmail(usuario.email);
+        if (!usuarioExistente)
+            return new ErrorHandler(StatusCode.ClientErrorUnauthorized, 'E-mail inválido ou usuário não existe.');
+
+        // if (!usuarioExistente.senha)
+        //     return new ErrorHandler(StatusCode.ClientErrorUnauthorized, 'Usuário não possui senha cadastrada.');
+
+        // if (!await bcrypt.compare(usuario.senha, usuarioExistente.senha))
+        //     return new ErrorHandler(StatusCode.ClientErrorUnauthorized, 'Senha inválida.');
+
+        const permissoesUsuario = await this.usuarioRepository.findPermissoesByEmail(usuario);
+        const expiresIn = parseInt(process.env.EXPIRES_IN);
+        const chave = process.env.KEY_SECRET;
+        const permissoes = permissoesUsuario.permissoes.map(permissao => permissao.ativo && permissao.nome);
+
+        return await this.usuarioRepository
+            .updateDataDeAcesso(usuario)
+            .then(async () => {
+                return {
+                    id: usuarioExistente.id,
+                    nome: usuarioExistente.nome,
+                    expiresIn,
+                    access_token: jwt.sign(
+                        {
+                            id: usuarioExistente.id,
+                            name: usuarioExistente.nome,
+                            roles: permissoes
+                        },
+                        chave,
+                        { expiresIn }
+                    ),
+                    refresh_token: jwt.sign(
+                        {
+                            email: usuarioExistente.email,
+                        },
+                        chave,
+                        { expiresIn: 7200 }
+                    )
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao gerer o token de acesso.');
             });
     }
 
@@ -461,13 +514,19 @@ class UsuarioService {
                         chave,
                         { expiresIn }
                     ),
+                    refresh_token: jwt.sign(
+                        {
+                            email: usuarioExistente.email,
+                        },
+                        chave,
+                        { expiresIn: 7200 }
+                    )
                 }
             })
             .catch(() => {
                 return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao gerer o token de acesso.');
             });
     }
-
 }
 
 export default UsuarioService;

@@ -1,8 +1,7 @@
-# API Node JS
+# # <a href="https://mystore-app.ddns.net:8181/api-docs">API Node JS - Gerenciamento de Usuários</a>
 Este sistema servirá para gerenciar usuários.
 
-## 📌 Versão ainda em desenvolvimento
-1.0.0
+## 📌 Versão 1.0.0
 
 ### Pré-requisitos
 Antes de começar, você vai precisar ter instalado em sua máquina as seguintes ferramentas:

@@ -29,13 +29,18 @@ class UsuarioService {
             return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Nome de usuário não informado.');
 
         const usuarioExistente = await this.buscarPorEmail(usuario.email);
-        if (usuarioExistente)
+        if (!usuarioExistente)
+            return new ErrorHandler(StatusCode.ClientErrorUnauthorized, 'E-mail inválido ou usuário não existe.');
+        if (usuarioExistente && usuario.id != usuarioExistente.id)
             return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Já existe um usuário cadastrado com esse email.');
 
         return await this.usuarioRepository
             .updateUsuario(usuario)
-            .then(async id => {
-                return this.buscarPorId(id);
+            .then(async (id) => {
+                if (id == 1)
+                    return this.buscarPorId(usuario.id);
+                else
+                    return new ErrorHandler(StatusCode.SuccessNoContent, 'Nenhum dado foi afetado com a operação.');
             })
             .catch(() => {
                 return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao alterar usuário o senha.');
@@ -437,8 +442,9 @@ class UsuarioService {
         const permissoesUsuario = await this.usuarioRepository.findPermissoesByEmailAndAtivo({email, ativo:true});
         const expiresIn = parseInt(process.env.EXPIRES_IN);
         const chave = process.env.KEY_SECRET;
+
         const permissoes = permissoesUsuario.permissoes.map(permissao => permissao.nome);
-        console.log(permissoes);
+
         return await this.usuarioRepository
             .updateDataDeAcesso(usuario)
             .then(async () => {

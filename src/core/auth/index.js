@@ -1,4 +1,6 @@
 import jwt from 'jsonwebtoken';
+import fs from 'fs';
+import path from 'path';
 import { promisify } from 'util';
 import { StatusCode } from 'status-code-enum';
 
@@ -40,7 +42,7 @@ const client = async (request, response, next) => {
 
 const resourceOwner = async (request, response, next) => {
     try {
-        const chave = process.env.KEY_SECRET;
+        const chave = fs.readFileSync(`${path.resolve(__dirname, '..', '..', 'infrastructure', 'keys', 'token_key_public.pem')}`, { encoding: 'utf8' });
 
         const authorizationHeader = request.headers.authorization;
 
@@ -52,7 +54,7 @@ const resourceOwner = async (request, response, next) => {
 
         const [bearer, token] = authorizationHeader.split(' ');
 
-        const {id, roles} = await promisify(jwt.verify)(token, chave);
+        const { id, roles } = await promisify(jwt.verify)(token, chave);
         request.usuarioAutenticadoId = id;
         request.usuarioAutenticadoRoles = roles;
 
@@ -67,7 +69,8 @@ const resourceOwner = async (request, response, next) => {
 
 const validateToken = async (token) => {
     try {
-        const chave = process.env.KEY_SECRET;
+        const chave = fs.readFileSync(`${path.resolve(__dirname, '..', '..', 'infrastructure', 'keys', 'token_key_public.pem')}`, { encoding: 'utf8' });
+
         return await promisify(jwt.verify)(token, chave);
     } catch (err) {
         return {

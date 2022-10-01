@@ -2,6 +2,7 @@ import { StatusCode } from 'status-code-enum';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
+import path from 'path';
 import { ErrorHandler } from '../../core/helpers/error';
 import UsuarioRepository from '../repository/UsuarioRepository';
 import { enviarEmail } from '../../core/mail';
@@ -394,7 +395,7 @@ class UsuarioService {
                 return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao pesquisar as permissões do usuário.');
             });
     }
-    
+
     async removerPermissaoDoUsuario(usuario) {
         const usuarioEncontrado = await this.buscarPorId(usuario.id);
         if (usuarioEncontrado.statusCode)
@@ -440,7 +441,8 @@ class UsuarioService {
 
         const permissoesUsuario = await this.usuarioRepository.findPermissoesByEmail(usuario);
         const expiresIn = parseInt(process.env.EXPIRES_IN);
-        const chave = process.env.KEY_SECRET;
+        const senha = process.env.PASSPHRASE;
+        const chave = fs.readFileSync(`${path.resolve(__dirname, '..', '..', 'infrastructure', 'keys', 'token_key_private.pem')}`, { encoding: 'utf8' });
         const permissoes = permissoesUsuario.permissoes.map(permissao => permissao.ativo && permissao.nome);
 
         return await this.usuarioRepository
@@ -456,15 +458,13 @@ class UsuarioService {
                             name: usuarioExistente.nome,
                             roles: permissoes
                         },
-                        chave,
-                        { expiresIn }
+                        { key: chave, passphrase: senha },
+                        { expiresIn: 7200, algorithm: 'RS256' }
                     ),
                     refresh_token: jwt.sign(
-                        {
-                            email: usuarioExistente.email,
-                        },
-                        chave,
-                        { expiresIn: 7200 }
+                        { email: usuarioExistente.email, },
+                        { key: chave, passphrase: senha },
+                        { expiresIn: 7200, algorithm: 'RS256' }
                     )
                 }
             })
@@ -475,7 +475,7 @@ class UsuarioService {
     }
 
     async validarAcesso(usuario) {
-        const {email, senha} = usuario;
+        const { email, senha } = usuario;
         if (!email)
             return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'E-mail de usuário não informado.');
 
@@ -492,10 +492,9 @@ class UsuarioService {
         if (!await bcrypt.compare(senha, usuarioExistente.senha))
             return new ErrorHandler(StatusCode.ClientErrorUnauthorized, 'Senha inválida.');
 
-        const permissoesUsuario = await this.usuarioRepository.findPermissoesByEmailAndAtivo({email, ativo:true});
+        const permissoesUsuario = await this.usuarioRepository.findPermissoesByEmailAndAtivo({ email, ativo: true });
         const expiresIn = parseInt(process.env.EXPIRES_IN);
-        const chave = process.env.KEY_SECRET;
-
+        const chave = fs.readFileSync(`${path.resolve(__dirname, '..', '..', 'infrastructure', 'keys', 'token_key_private.pem')}`, { encoding: 'utf8' });
         const permissoes = permissoesUsuario.permissoes.map(permissao => permissao.nome);
 
         return await this.usuarioRepository
@@ -511,15 +510,13 @@ class UsuarioService {
                             name: usuarioExistente.nome,
                             roles: permissoes
                         },
-                        chave,
-                        { expiresIn }
+                        { key: chave, passphrase: '123456' },
+                        { expiresIn: 7200, algorithm: 'RS256' }
                     ),
                     refresh_token: jwt.sign(
-                        {
-                            email: usuarioExistente.email,
-                        },
-                        chave,
-                        { expiresIn: 7200 }
+                        { email: usuarioExistente.email, },
+                        { key: chave, passphrase: '123456' },
+                        { expiresIn: 7200, algorithm: 'RS256' }
                     )
                 }
             })

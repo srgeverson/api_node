@@ -130,6 +130,9 @@ $ npm install multer --save
 $ CLIENT_ID='Nome de usuário para a autenticação da API.'
 $ CLIENT_SECRET='Senha de usuário para a autenticação da API.'
 
+# Se durante a geração das chaves(pública/privada) estiver utilizado senha adiciona a seguinte propriedade
+$ PASSPHRASE='Senha da chave privada gerada'
+
 ```
 #### 🛠️ Protocolo https
 ```bash
@@ -145,6 +148,29 @@ $ openssl x509 -req -days 9999 -in csr_api_node.pem -signkey key_api_node.pem -o
 
 # 
 $ rm csr_api_node.pem
+
+```
+
+#### 🛠️ Criptografia assimétrica
+```bash
+
+# Entrando no diretório
+$ cd src/infrastructure/keys/
+
+# Gerando chave privada
+$ openssl genrsa -des3 -out token_key_private.pem 2048
+
+# Adicionando o arquivo gerado no .gitignore
+$ cat src/infrastructure/keys/token_key_private.pem >> .gitignore
+
+# Gerando chave pública a partir da chave privada gerada anteriormente
+$ openssl rsa -in token_key_private.pem -outform PEM -pubout -out token_key_public.pem
+
+# Adicionando o arquivo gerado no .gitignore
+$ cat src/infrastructure/keys/token_key_public.pem >> .gitignore
+
+# Visualizando chave gerada
+$ less token_key_private.pem
 
 ```
 

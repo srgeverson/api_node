@@ -109,3 +109,5 @@ outDir
 
 #
 key_api_node.pem
+src/infrastructure/keys/token_key_private.pem
+src/infrastructure/keys/token_key_public.pem

@@ -168,16 +168,17 @@ class UsuarioController {
     async login(request, response) {
         let usuarioAutorizado = null;
         const { grant_type, username, password, email, senha, refresh_token } = request.body;
+        const { accessTokenValidity, refreshTokenValidity } = request;
         switch (grant_type) {
             case 'password':
-                usuarioAutorizado = await this.usuarioService.validarAcesso({ email: username, senha: password });
+                usuarioAutorizado = await this.usuarioService.validarAcesso({ email: username, senha: password }, { accessTokenValidity, refreshTokenValidity });
                 break;
             case 'refresh_token':
                 const refreshToken = await validateToken(refresh_token);
                 if (refreshToken.statusCode)
                     usuarioAutorizado = refreshToken;
                 else
-                    usuarioAutorizado = await this.usuarioService.revalidarAcesso({ email: refreshToken.email });
+                    usuarioAutorizado = await this.usuarioService.revalidarAcesso({ email: refreshToken.email }, { accessTokenValidity, refreshTokenValidity });
                 break;
             default:
                 usuarioAutorizado = await this.usuarioService.validarAcesso({ email, senha });

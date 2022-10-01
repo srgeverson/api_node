@@ -77,8 +77,14 @@ $ DATABASE_PASSWORD='Senha do banco de dados.'
 
 💡 As tabelas e os dados inicias da aplicação estão dentro das pastas /api_node/src/core/database/migraions e /api_node/src/core/database/seeders respectivamente.
 
-# Criando uma migration
+# Criando uma Migration
 $ npx sequelize migration:create --name=NOME_DO_ARQUIVVO_A_SER_GERADO
+
+# Criando um Model
+$ npx sequelize-cli model:generate --name NOME_DO_MODEL --attributes ATRIBUTO:TIPO
+
+# Criando uma Seed
+$ npx sequelize-cli seed:generate --name NOME_DO_ARQUIVVO_A_SER_GERADO
 
 # Rodando as migrations.
 $ npx sequelize db:migrate

@@ -422,7 +422,7 @@ class UsuarioService {
         }
     }
 
-    async revalidarAcesso(usuario) {
+    async revalidarAcesso(usuario, auth) {
         // if (!usuario.email)
         //     return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'E-mail de usuário não informado.');
 
@@ -441,7 +441,7 @@ class UsuarioService {
 
         const permissoesUsuario = await this.usuarioRepository.findPermissoesByEmail(usuario);
         const expiresIn = parseInt(process.env.EXPIRES_IN);
-        const senha = process.env.PASSPHRASE;
+        const senhaKeyPair = process.env.PASSPHRASE;
         const chave = fs.readFileSync(`${path.resolve(__dirname, '..', '..', 'infrastructure', 'keys', 'token_key_private.pem')}`, { encoding: 'utf8' });
         const permissoes = permissoesUsuario.permissoes.map(permissao => permissao.ativo && permissao.nome);
 
@@ -458,13 +458,13 @@ class UsuarioService {
                             name: usuarioExistente.nome,
                             roles: permissoes
                         },
-                        { key: chave, passphrase: senha },
-                        { expiresIn: 7200, algorithm: 'RS256' }
+                        { key: chave, passphrase: senhaKeyPair },
+                        { expiresIn: auth.accessTokenValidity, algorithm: 'RS256' }
                     ),
                     refresh_token: jwt.sign(
                         { email: usuarioExistente.email, },
-                        { key: chave, passphrase: senha },
-                        { expiresIn: 7200, algorithm: 'RS256' }
+                        { key: chave, passphrase: senhaKeyPair },
+                        { expiresIn: auth.refreshTokenValidity, algorithm: 'RS256' }
                     )
                 }
             })
@@ -474,7 +474,7 @@ class UsuarioService {
             });
     }
 
-    async validarAcesso(usuario) {
+    async validarAcesso(usuario, auth) {
         const { email, senha } = usuario;
         if (!email)
             return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'E-mail de usuário não informado.');
@@ -494,6 +494,7 @@ class UsuarioService {
 
         const permissoesUsuario = await this.usuarioRepository.findPermissoesByEmailAndAtivo({ email, ativo: true });
         const expiresIn = parseInt(process.env.EXPIRES_IN);
+        const senhaKeyPair = process.env.PASSPHRASE;
         const chave = fs.readFileSync(`${path.resolve(__dirname, '..', '..', 'infrastructure', 'keys', 'token_key_private.pem')}`, { encoding: 'utf8' });
         const permissoes = permissoesUsuario.permissoes.map(permissao => permissao.nome);
 
@@ -510,13 +511,13 @@ class UsuarioService {
                             name: usuarioExistente.nome,
                             roles: permissoes
                         },
-                        { key: chave, passphrase: '123456' },
-                        { expiresIn: 7200, algorithm: 'RS256' }
+                        { key: chave, passphrase: senhaKeyPair },
+                        { expiresIn: auth.accessTokenValidity, algorithm: 'RS256' }
                     ),
                     refresh_token: jwt.sign(
                         { email: usuarioExistente.email, },
-                        { key: chave, passphrase: '123456' },
-                        { expiresIn: 7200, algorithm: 'RS256' }
+                        { key: chave, passphrase: senhaKeyPair },
+                        { expiresIn: auth.refreshTokenValidity, algorithm: 'RS256' }
                     )
                 }
             })

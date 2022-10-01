@@ -38,7 +38,8 @@ const client = async (request, response, next) => {
                 message: 'Client_secret incorreto!'
             });
         }
-
+        request.accessTokenValidity = credentials.access_token_validity;
+        request.refreshTokenValidity = credentials.refresh_token_validity;
         return next();
     } catch (err) {
         return response.status(StatusCode.ClientErrorUnauthorized).json({

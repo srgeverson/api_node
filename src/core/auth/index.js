@@ -1,36 +1,44 @@
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 import fs from 'fs';
 import path from 'path';
 import { promisify } from 'util';
 import { StatusCode } from 'status-code-enum';
+import OAuthClientDetailsService from '../../domain/service/OAuthClientDetailsService';
 
 const client = async (request, response, next) => {
     try {
-        const client_id = process.env.CLIENT_ID;
-        const client_secret = process.env.CLIENT_SECRET;
-
         const authorizationHeader = request.headers.authorization;
-
-        if (!authorizationHeader)
+        
+        if (!authorizationHeader) {
             return response.status(StatusCode.ClientErrorUnauthorized).json({
                 statusCode: StatusCode.ClientErrorUnauthorized,
                 message: 'Credenciais do client não informada!'
             });
+        }
 
         const [basic, token] = authorizationHeader.split(' ');
 
+        const oAuthClientDetailsService = new OAuthClientDetailsService();
+
         const decoded = Buffer.from(token, 'base64').toString('ascii').split(':');
-        if (decoded[0] != client_id)
+
+        const credentials = await oAuthClientDetailsService.buscarPorClientId(decoded[0]);
+
+        if (!credentials) {
             return response.status(StatusCode.ClientErrorUnauthorized).json({
                 statusCode: StatusCode.ClientErrorUnauthorized,
-                message: 'Client_id incorreto!'
+                message: 'Credenciais inválidas ou inexistente!'
             });
+        }
 
-        if (decoded[1] != client_secret)
+        if (!await bcrypt.compare(decoded[1], credentials.client_secret)) {
             return response.status(StatusCode.ClientErrorUnauthorized).json({
                 statusCode: StatusCode.ClientErrorUnauthorized,
                 message: 'Client_secret incorreto!'
             });
+        }
+
         return next();
     } catch (err) {
         return response.status(StatusCode.ClientErrorUnauthorized).json({

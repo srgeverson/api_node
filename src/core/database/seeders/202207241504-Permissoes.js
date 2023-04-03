@@ -40,6 +40,12 @@ module.exports = {
           descricao: 'Permite acesso aos recursos apenas do perfil do próprio usuário.',
           ativo: true
         },
+        {
+          id: 7,
+          nome: 'editar_permissao',
+          descricao: 'Permite editar todas as permissões.',
+          ativo: true
+        }
       ], {})
   },
 

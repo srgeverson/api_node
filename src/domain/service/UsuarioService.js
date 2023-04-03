@@ -2,17 +2,21 @@ import { StatusCode } from 'status-code-enum';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
+import path from 'path';
 import { ErrorHandler } from '../../core/helpers/error';
 import UsuarioRepository from '../repository/UsuarioRepository';
 import { enviarEmail } from '../../core/mail';
 import { validateEmail } from '../../core/helpers/utils';
 import PermissaoService from '../service/PermissaoService';
+import UsuarioPermissaoService from '../service/UsuarioPermissaoService';
+import { toBoolean } from '../../core/utils';
 
 class UsuarioService {
 
     constructor() {
         this.usuarioRepository = new UsuarioRepository();
         this.permissaoService = new PermissaoService();
+        this.usuarioPermissaoService = new UsuarioPermissaoService();
     }
 
     async alterarUsuario(usuario) {
@@ -26,13 +30,18 @@ class UsuarioService {
             return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Nome de usuário não informado.');
 
         const usuarioExistente = await this.buscarPorEmail(usuario.email);
-        if (usuarioExistente)
+        if (!usuarioExistente)
+            return new ErrorHandler(StatusCode.ClientErrorUnauthorized, 'E-mail inválido ou usuário não existe.');
+        if (usuarioExistente && usuario.id != usuarioExistente.id)
             return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Já existe um usuário cadastrado com esse email.');
 
         return await this.usuarioRepository
             .updateUsuario(usuario)
-            .then(async id => {
-                return this.buscarPorId(id);
+            .then(async (id) => {
+                if (id == 1)
+                    return this.buscarPorId(usuario.id);
+                else
+                    return new ErrorHandler(StatusCode.SuccessNoContent, 'Nenhum dado foi afetado com a operação.');
             })
             .catch(() => {
                 return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao alterar usuário o senha.');
@@ -62,7 +71,7 @@ class UsuarioService {
     async alterarFotoUsuario(usuario) {
 
         if (!usuario.foto)
-        return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Foto inválida ou não informada.');
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Foto inválida ou não informada.');
 
         const id = usuario.id;
         console.log(usuario);
@@ -88,7 +97,7 @@ class UsuarioService {
                 return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao alterar usuário o senha.');
             });
     }
-    
+
     async buscarPorEmail(email) {
         if (!email)
             return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'E-mail de usuário não informado.');
@@ -268,6 +277,33 @@ class UsuarioService {
             });
     }
 
+    async incluirPermissaoAoUsuario(usuario) {
+        const usuarioEncontrado = await this.buscarPorId(usuario.id);
+
+        if (usuarioEncontrado.statusCode)
+            return usuarioEncontrado;
+
+        if (!usuarioEncontrado.ativo)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Usuário informado não está ativo.');
+
+        const permissao = await this.permissaoService.buscarPorId(usuario.idPermissao);
+        if (permissao.statusCode)
+            return permissao;
+
+        const permissaoParaCadastro = { usuarioId: usuario.id, permissaoId: usuario.idPermissao };
+        const usuariosPermissoes = await this.usuarioPermissaoService
+            .buscarPorIdDeUsuarioEPermissao(permissaoParaCadastro);
+        if (usuariosPermissoes) {
+            console.log('isEquivalent')
+            if (usuariosPermissoes.ativo === true)
+                return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Usuário já possui a permissão e a mesma está ativa.');
+            else {
+                return this.usuarioPermissaoService.ativarOuDesativarPermissaoDoUsuario({ ...permissaoParaCadastro, ativo: true });
+            }
+        } else
+            return this.usuarioPermissaoService.salvarUsuarioEPermissao({ usuarioId: usuarioEncontrado.id, permissaoId: usuario.idPermissao });
+    }
+
     async incluirPermissoesAoUsuario(usuario) {
 
         const usuarioEncontrado = await this.buscarPorId(usuario.id);
@@ -288,7 +324,7 @@ class UsuarioService {
                         const { permissoes } = permissaoEncontrada;
                         if (permissoes) {
                             console.log(permissoes[0].ativo)
-                            if (!permissoes[0].ativo)
+                            if (permissoes[0].ativo === false)
                                 permissoesNaoOk.push({ id: value, mensagem: 'Usuário já possui esta permissão, porém a mesma não está ativa.' });
                             else if (!permissoes[0].usuarios_permissoes.ativo)
                                 permissoesNaoOk.push({ id: value, mensagem: 'Usuário já possui esta permissão, porém a mesma está desativada para este usuário.' });
@@ -325,7 +361,7 @@ class UsuarioService {
             return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Falha durante o processo de validação de permissão.');
         });
     }
-    
+
     async todasPermissoesDoUsuario(usuario) {
 
         const usuarioEncontrado = await this.buscarPorId(usuario.id);
@@ -343,28 +379,72 @@ class UsuarioService {
             });
     }
 
-    async validarAcesso(usuario) {
-        if (!usuario.email)
-            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'E-mail de usuário não informado.');
+    async todasPermissoesDoUsuarioPorAtivo(usuario) {
+        const { id, ativo } = usuario;
+        const usuarioEncontrado = await this.buscarPorId(id);
 
-        if (!usuario.senha)
-            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Senha de usuário não informado.');
+        if (usuarioEncontrado.statusCode)
+            return usuarioEncontrado;
+
+        return await this.usuarioRepository
+            .findPermissoesByUsuarioAndAtivo({ id, ativo: toBoolean(ativo) })
+            .then(async permissoesDoUsuario => {
+                return permissoesDoUsuario;
+            })
+            .catch(() => {
+                return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao pesquisar as permissões do usuário.');
+            });
+    }
+
+    async removerPermissaoDoUsuario(usuario) {
+        const usuarioEncontrado = await this.buscarPorId(usuario.id);
+        if (usuarioEncontrado.statusCode)
+            return usuarioEncontrado;
+
+        if (!usuarioEncontrado.ativo)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Usuário informado não está ativo.');
+
+        const permissao = await this.permissaoService.buscarPorId(usuario.idPermissao);
+        if (permissao.statusCode)
+            return permissao;
+
+        const permissaoParaCadastro = { usuarioId: usuario.id, permissaoId: usuario.idPermissao };
+
+        const usuariosPermissoes = await this.usuarioPermissaoService.buscarPorIdDeUsuarioEPermissao(permissaoParaCadastro);
+        if (usuariosPermissoes) {
+            if (usuariosPermissoes.ativo === true)
+                return this.usuarioPermissaoService.ativarOuDesativarPermissaoDoUsuario({ ...permissaoParaCadastro, ativo: false });
+            else {
+                return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'A permissão informada já encontra-se desativada.');
+            }
+        } else {
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'A permissão informada não foi encontrada para o usuário informado.');
+        }
+    }
+
+    async revalidarAcesso(usuario, auth) {
+        // if (!usuario.email)
+        //     return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'E-mail de usuário não informado.');
+
+        // if (!usuario.senha)
+        //     return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Senha de usuário não informado.');
 
         const usuarioExistente = await this.buscarPorEmail(usuario.email);
         if (!usuarioExistente)
             return new ErrorHandler(StatusCode.ClientErrorUnauthorized, 'E-mail inválido ou usuário não existe.');
 
-        if (!usuarioExistente.senha)
-            return new ErrorHandler(StatusCode.ClientErrorUnauthorized, 'Usuário não possui senha cadastrada.');
+        // if (!usuarioExistente.senha)
+        //     return new ErrorHandler(StatusCode.ClientErrorUnauthorized, 'Usuário não possui senha cadastrada.');
 
-        if (!await bcrypt.compare(usuario.senha, usuarioExistente.senha))
-            return new ErrorHandler(StatusCode.ClientErrorUnauthorized, 'Senha inválida.');
+        // if (!await bcrypt.compare(usuario.senha, usuarioExistente.senha))
+        //     return new ErrorHandler(StatusCode.ClientErrorUnauthorized, 'Senha inválida.');
 
         const permissoesUsuario = await this.usuarioRepository.findPermissoesByEmail(usuario);
         const expiresIn = parseInt(process.env.EXPIRES_IN);
-        const chave = process.env.KEY_SECRET;
+        const senhaKeyPair = process.env.PASSPHRASE;
+        const chave = fs.readFileSync(`${path.resolve(__dirname, '..', '..', 'infrastructure', 'keys', 'token_key_private.pem')}`, { encoding: 'utf8' });
         const permissoes = permissoesUsuario.permissoes.map(permissao => permissao.ativo && permissao.nome);
-console.log("--------------------------------------------------------------------------------------------------");
+
         return await this.usuarioRepository
             .updateDataDeAcesso(usuario)
             .then(async () => {
@@ -378,9 +458,14 @@ console.log("-------------------------------------------------------------------
                             name: usuarioExistente.nome,
                             roles: permissoes
                         },
-                        chave,
-                        { expiresIn }
+                        { key: chave, passphrase: senhaKeyPair },
+                        { expiresIn: auth.accessTokenValidity, algorithm: 'RS256' }
                     ),
+                    refresh_token: jwt.sign(
+                        { email: usuarioExistente.email, },
+                        { key: chave, passphrase: senhaKeyPair },
+                        { expiresIn: auth.refreshTokenValidity, algorithm: 'RS256' }
+                    )
                 }
             })
             .catch((err) => {
@@ -389,6 +474,57 @@ console.log("-------------------------------------------------------------------
             });
     }
 
+    async validarAcesso(usuario, auth) {
+        const { email, senha } = usuario;
+        if (!email)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'E-mail de usuário não informado.');
+
+        if (!senha)
+            return new ErrorHandler(StatusCode.ClientErrorBadRequest, 'Senha de usuário não informado.');
+
+        const usuarioExistente = await this.buscarPorEmail(email);
+        if (!usuarioExistente)
+            return new ErrorHandler(StatusCode.ClientErrorUnauthorized, 'E-mail inválido ou usuário não existe.');
+
+        if (!senha)
+            return new ErrorHandler(StatusCode.ClientErrorUnauthorized, 'Usuário não possui senha cadastrada.');
+
+        if (!await bcrypt.compare(senha, usuarioExistente.senha))
+            return new ErrorHandler(StatusCode.ClientErrorUnauthorized, 'Senha inválida.');
+
+        const permissoesUsuario = await this.usuarioRepository.findPermissoesByEmailAndAtivo({ email, ativo: true });
+        const expiresIn = parseInt(process.env.EXPIRES_IN);
+        const senhaKeyPair = process.env.PASSPHRASE;
+        const chave = fs.readFileSync(`${path.resolve(__dirname, '..', '..', 'infrastructure', 'keys', 'token_key_private.pem')}`, { encoding: 'utf8' });
+        const permissoes = permissoesUsuario.permissoes.map(permissao => permissao.nome);
+
+        return await this.usuarioRepository
+            .updateDataDeAcesso(usuario)
+            .then(async () => {
+                return {
+                    id: usuarioExistente.id,
+                    nome: usuarioExistente.nome,
+                    expiresIn,
+                    access_token: jwt.sign(
+                        {
+                            id: usuarioExistente.id,
+                            name: usuarioExistente.nome,
+                            roles: permissoes
+                        },
+                        { key: chave, passphrase: senhaKeyPair },
+                        { expiresIn: auth.accessTokenValidity, algorithm: 'RS256' }
+                    ),
+                    refresh_token: jwt.sign(
+                        { email: usuarioExistente.email, },
+                        { key: chave, passphrase: senhaKeyPair },
+                        { expiresIn: auth.refreshTokenValidity, algorithm: 'RS256' }
+                    )
+                }
+            })
+            .catch(() => {
+                return new ErrorHandler(StatusCode.ServerErrorInternal, 'Erro ao gerer o token de acesso.');
+            });
+    }
 }
 
 export default UsuarioService;

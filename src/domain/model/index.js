@@ -3,8 +3,10 @@ import database from '../../core/database';
 import Permissao from './Permissao';
 import Usuario from './Usuario';
 import Log from './Log';
+import UsuarioPermissao from './UsuarioPermissao';
+import OAuthClientDetails from './OAuthClientDetails';
 
-const models = [Permissao, Usuario, Log];
+const models = [Log, OAuthClientDetails, Permissao, Usuario, UsuarioPermissao];
 
 class Database {
   constructor() {

@@ -10,6 +10,7 @@ module.exports = {
       { usuario_id: 1, permissao_id: 4, ativo: true },
       { usuario_id: 1, permissao_id: 5, ativo: true },
       { usuario_id: 1, permissao_id: 6, ativo: true },
+      { usuario_id: 1, permissao_id: 7, ativo: true },
       //#endregion Permissões do usuário administrador
       { usuario_id: 2, permissao_id: 6, ativo: true },
     ], {})
